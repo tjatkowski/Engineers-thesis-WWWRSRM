@@ -1,7 +1,10 @@
-module org.example {
+module SimulationVisualization {
     requires javafx.controls;
     requires javafx.fxml;
+    requires osmosis.pbf;
+    requires osmosis.core;
 
-    opens org.example to javafx.fxml;
-    exports org.example;
+
+    opens visualization to javafx.fxml;
+    exports visualization;
 }
