@@ -4,6 +4,7 @@ import graph.OSM_Edge;
 import graph.OSM_Graph;
 import graph.OSM_Node;
 import javafx.geometry.Point2D;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -22,6 +23,7 @@ public class MapPane extends Pane {
     public MapPane() {
         this.setPrefSize(this.mapWidth, this.mapHeight);
         this.setStyle("-fx-background-color: #808080;");
+        this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
     }
 
     public MapPane(OSM_Graph osm_graph) {
@@ -38,12 +40,14 @@ public class MapPane extends Pane {
         for (OSM_Edge osm_edge : this.osm_graph.getEdges()) {
             OSM_Node startNode = osm_edge.getStartNode();
             OSM_Node endNode = osm_edge.getEndNode();
-            String roadType = osm_edge.getRoadType();
-            Point2D startNodeCoordinatesXY = this.convertNodeCoordinatesToXY(new Point2D(startNode.getLongitude(), startNode.getLatitude()));
-            Point2D endNodeCoordinatesXY = this.convertNodeCoordinatesToXY(new Point2D(endNode.getLongitude(), endNode.getLatitude()));
-            this.drawLine(startNodeCoordinatesXY.getX(), startNodeCoordinatesXY.getY(),
-                    endNodeCoordinatesXY.getX(), endNodeCoordinatesXY.getY(), roadType);
+            if (this.isInsideWindow(startNode) || this.isInsideWindow(endNode)) {
+                String roadType = osm_edge.getRoadType();
+                Point2D startNodeCoordinatesXY = this.convertNodeCoordinatesToXY(new Point2D(startNode.getLongitude(), startNode.getLatitude()));
+                Point2D endNodeCoordinatesXY = this.convertNodeCoordinatesToXY(new Point2D(endNode.getLongitude(), endNode.getLatitude()));
 
+                this.drawLine(startNodeCoordinatesXY.getX(), startNodeCoordinatesXY.getY(),
+                        endNodeCoordinatesXY.getX(), endNodeCoordinatesXY.getY(), roadType);
+            }
         }
     }
 
@@ -74,6 +78,43 @@ public class MapPane extends Pane {
         }
 
         this.getChildren().add(line);
+    }
+
+    /**
+     * Util method which checks if node in degree coordinates is inside map boundaries.
+     * @param osm_node OSM_Node
+     * @return true if node is inside map boundaries
+     */
+    public boolean isInsideWindow(OSM_Node osm_node) {
+        if (osm_node.getLongitude() > this.minBound.getX()
+                && osm_node.getLatitude() < this.minBound.getY()
+                && osm_node.getLongitude() < this.maxBound.getX()
+                && osm_node.getLatitude() > this.maxBound.getY()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Method which moves map boundaries.
+     * @param xDelta x delta in XY coordinates
+     * @param yDelta y delta in XY coordinates
+     */
+    public void dragWindowByVector(double xDelta, double yDelta) {
+        Point2D minBoundXY = this.convertNodeCoordinatesToXY(this.minBound);
+        Point2D maxBoundXY = this.convertNodeCoordinatesToXY(this.maxBound);
+
+        double newMinBoundLongitude = this.convertXToLongitude(minBoundXY.getX() - xDelta);
+        double newMinBoundLatitude = this.convertYToLatitude(minBoundXY.getY() - yDelta);
+
+        double newMaxBoundLongitude = this.convertXToLongitude(maxBoundXY.getX() - xDelta);
+        double newMaxBoundLatitude = this.convertYToLatitude(maxBoundXY.getY() - yDelta);
+
+        this.minBound = new Point2D(newMinBoundLongitude, newMinBoundLatitude);
+        this.maxBound = new Point2D(newMaxBoundLongitude, newMaxBoundLatitude);
+
+        this.getChildren().clear();
+        this.drawLines();
     }
 
     /**
@@ -109,5 +150,14 @@ public class MapPane extends Pane {
         double y = ((this.minBound.getY() - nodeCoordinates.getY()) /
                 (this.minBound.getY() - this.maxBound.getY())) * (this.mapHeight);
         return new Point2D((int) x, (int) y);
+    }
+
+
+    public double convertXToLongitude(double x) {
+        return this.minBound.getX() + ((x) / this.mapWidth) * (this.maxBound.getX() - this.minBound.getX());
+    }
+
+    public double convertYToLatitude(double y) {
+        return this.minBound.getY() - ((y / this.mapHeight) * (this.minBound.getY() - this.maxBound.getY()));
     }
 }
