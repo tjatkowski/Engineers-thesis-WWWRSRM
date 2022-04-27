@@ -5,7 +5,7 @@ import javafx.scene.input.MouseEvent;
 
 /**
  * MapDraggingHandler handles mouse dragging on the map.
- * It shifts map boundaries to the proper coordinates.
+ * It computes delta X and delta Y to shift map view.
  */
 public class MapDraggingHandler implements EventHandler<MouseEvent> {
     private final MapPane mapPane;
@@ -35,6 +35,6 @@ public class MapDraggingHandler implements EventHandler<MouseEvent> {
     public void dragMap(){
         double xDelta = this.currMouseX - this.lastMouseX;
         double yDelta = this.currMouseY - this.lastMouseY;
-        this.mapPane.dragWindowByVector(xDelta, yDelta);
+        this.mapPane.dragMapViewByVector(xDelta, yDelta);
     }
 }
