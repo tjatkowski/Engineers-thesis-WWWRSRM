@@ -7,4 +7,5 @@ module SimulationVisualization {
 
     opens visualization to javafx.fxml;
     exports visualization;
+    exports graph;
 }
