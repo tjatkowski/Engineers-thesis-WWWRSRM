@@ -17,7 +17,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        OSM_Graph osm_graph = OSM_Parser.CreateGraph("src\\main\\resources\\osm\\half_cracow.pbf");
+        OSM_Graph osm_graph = OSM_Parser.CreateGraph("src\\main\\resources\\osm\\cracow.pbf");
 
         MapPane mapPane = new MapPane(osm_graph);
 //        mapPane.drawNodes();
