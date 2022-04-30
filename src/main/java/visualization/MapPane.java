@@ -4,6 +4,8 @@ import graph.OSM_Edge;
 import graph.OSM_Graph;
 import graph.OSM_Node;
 import javafx.geometry.Point2D;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -23,13 +25,17 @@ public class MapPane extends Pane {
     private final int minZoomLevel = 1;
     private final int maxZoomLevel = 23;
     private int zoomLevel;
+    private GraphicsContext gc;
+    private Canvas map;
 
     public MapPane() {
         this.setPrefSize(this.mapWidth, this.mapHeight);
         this.setStyle("-fx-background-color: #808080;");
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
-        this.zoomLevel = 16; // hardcoded value between minZoomLevel:maxZoomLevel
+        this.zoomLevel = 18; // hardcoded value between minZoomLevel:maxZoomLevel
+        this.map = new Canvas(this.mapWidth, this.mapHeight);
+        this.gc = map.getGraphicsContext2D();
     }
 
     public MapPane(OSM_Graph osm_graph) {
@@ -43,18 +49,63 @@ public class MapPane extends Pane {
      * drawLines method draws all the road graph edges on the MapPane
      */
     public void drawLines() {
+        this.gc.clearRect(0, 0, this.mapWidth, this.mapHeight);
         for (OSM_Edge osm_edge : this.osm_graph.getEdges()) {
+            String roadType = osm_edge.getRoadType();
+            int edgeMinZoomLevel = 0;
+            switch (roadType){
+                case "road":
+                    edgeMinZoomLevel = this.minZoomLevel;
+                    break;
+                case "linkRoad":
+                    edgeMinZoomLevel = 20;
+                    break;
+                case "specialRoad":
+                    edgeMinZoomLevel = 20;
+                    break;
+            }
+            if (edgeMinZoomLevel > this.zoomLevel){
+                continue;
+            }
+
             OSM_Node startNode = osm_edge.getStartNode();
             OSM_Node endNode = osm_edge.getEndNode();
             if (this.isInsideWindow(startNode) || this.isInsideWindow(endNode)) {
-                String roadType = osm_edge.getRoadType();
+//                String roadType = osm_edge.getRoadType();
                 double startNodeX = this.convertLongitudeToX(startNode.getLongitude());
                 double startNodeY = this.convertLatitudeToY(startNode.getLatitude());
                 double endNodeX = this.convertLongitudeToX(endNode.getLongitude());
                 double endNodeY = this.convertLatitudeToY(endNode.getLatitude());
-                this.drawLine(startNodeX, startNodeY, endNodeX, endNodeY, roadType);
+//                this.drawLine(startNodeX, startNodeY, endNodeX, endNodeY, roadType);
+
+                // drawing in canvas
+                this.drawLineInCanvas(this.map, startNodeX, startNodeY, endNodeX, endNodeY, roadType);
             }
         }
+        this.getChildren().add(this.map);
+    }
+
+    public void drawLineInCanvas(Canvas map, double startX, double startY, double endX, double endY, String roadType){
+        double x1 = this.convertXToFitWindow(startX);
+        double y1 = this.convertYToFitWindow(startY);
+        double x2 = this.convertXToFitWindow(endX);
+        double y2 = this.convertYToFitWindow(endY);
+
+        switch (roadType) {
+            case "road":
+                this.gc.setStroke(Color.SANDYBROWN);
+                this.gc.setLineWidth(3);
+                break;
+            case "linkRoad":
+                this.gc.setStroke(Color.SALMON);
+                this.gc.setLineWidth(2);
+                break;
+            case "specialRoad":
+                this.gc.setStroke(Color.PAPAYAWHIP);
+                this.gc.setLineWidth(1);
+                break;
+        }
+        this.gc.strokeLine(x1, y1, x2, y2);
     }
 
     /**
