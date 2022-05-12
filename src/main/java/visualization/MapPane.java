@@ -10,10 +10,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import osm.EdgeParameter;
 import utils.CoordinatesConverter;
+
 import static utils.ZoomDetector.getZoomLevel;
+
 /**
  * MapPane class does visualization of the road graph
  */
@@ -50,22 +52,15 @@ public class MapPane extends Pane {
      * drawLines method draws all the road graph edges on the MapPane
      */
     public void drawLines() {
+//        System.out.println("ZoomLevel : " + this.zoomLevel);
         this.gc.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
         for (OSM_Edge osm_edge : this.osm_graph.getEdges()) {
-            String roadType = osm_edge.getRoadType();
-            int edgeMinZoomLevel = 0;
-            switch (roadType){
-                case "road":
-                    edgeMinZoomLevel = MIN_ZOOM_LEVEL;
-                    break;
-                case "linkRoad":
-                    edgeMinZoomLevel = 16;
-                    break;
-                case "specialRoad":
-                    edgeMinZoomLevel = 16;
-                    break;
-            }
-            if (edgeMinZoomLevel > this.zoomLevel){
+            EdgeParameter edgeParameter = osm_edge.getEdgeParameter();
+            int edgeMinZoomLevel = edgeParameter.getZoomLevel();
+            int edgeWidth = edgeParameter.getEdgeWidth();
+            Color edgeColor = edgeParameter.getColor();
+
+            if (edgeMinZoomLevel > this.zoomLevel) {
                 continue;
             }
 
@@ -78,32 +73,19 @@ public class MapPane extends Pane {
                 double endNodeY = CoordinatesConverter.convertLatitudeToY(endNode.getLatitude(), this.zoomLevel);
 
                 // drawing in canvas
-                this.drawLineInCanvas(this.map, startNodeX, startNodeY, endNodeX, endNodeY, roadType);
+                this.drawLineInCanvas(this.map, startNodeX, startNodeY, endNodeX, endNodeY, edgeWidth, edgeColor);
             }
         }
         this.getChildren().add(this.map);
     }
 
-    public void drawLineInCanvas(Canvas map, double startX, double startY, double endX, double endY, String roadType){
+    public void drawLineInCanvas(Canvas map, double startX, double startY, double endX, double endY, int width, Color color) {
         double x1 = CoordinatesConverter.scaleXToFitWindow(startX, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
         double y1 = CoordinatesConverter.scaleYToFitWindow(startY, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
         double x2 = CoordinatesConverter.scaleXToFitWindow(endX, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
         double y2 = CoordinatesConverter.scaleYToFitWindow(endY, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
-
-        switch (roadType) {
-            case "road":
-                this.gc.setStroke(Color.SANDYBROWN);
-                this.gc.setLineWidth(3);
-                break;
-            case "linkRoad":
-                this.gc.setStroke(Color.SALMON);
-                this.gc.setLineWidth(2);
-                break;
-            case "specialRoad":
-                this.gc.setStroke(Color.PAPAYAWHIP);
-                this.gc.setLineWidth(1);
-                break;
-        }
+        this.gc.setStroke(color);
+        this.gc.setLineWidth(width);
         this.gc.strokeLine(x1, y1, x2, y2);
     }
 
