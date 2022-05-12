@@ -12,7 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-
+import utils.CoordinatesConverter;
+import static utils.ZoomDetector.getZoomLevel;
 /**
  * MapPane class does visualization of the road graph
  */
@@ -20,21 +21,20 @@ public class MapPane extends Pane {
     private OSM_Graph osm_graph;
     private Point2D minBound;
     private Point2D maxBound;
-    private final int mapWidth = 1280;
-    private final int mapHeight = 720;
-    private final int minZoomLevel = 1;
-    private final int maxZoomLevel = 23;
+    private static final int MAP_WIDTH = 1280;
+    private static final int MAP_HEIGHT = 720;
+    private static final int MIN_ZOOM_LEVEL = 1;
+    private static final int MAX_ZOOM_LEVEL = 23;
     private int zoomLevel;
-    private GraphicsContext gc;
-    private Canvas map;
+    private final GraphicsContext gc;
+    private final Canvas map;
 
     public MapPane() {
-        this.setPrefSize(this.mapWidth, this.mapHeight);
+        this.setPrefSize(MAP_WIDTH, MAP_HEIGHT);
         this.setStyle("-fx-background-color: #808080;");
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
-        this.zoomLevel = 18; // hardcoded value between minZoomLevel:maxZoomLevel
-        this.map = new Canvas(this.mapWidth, this.mapHeight);
+        this.map = new Canvas(MAP_WIDTH, MAP_HEIGHT);
         this.gc = map.getGraphicsContext2D();
     }
 
@@ -43,25 +43,26 @@ public class MapPane extends Pane {
         this.osm_graph = osm_graph;
         this.minBound = this.osm_graph.getTopLeftBound();
         this.maxBound = this.osm_graph.getBottomRightBound();
+        this.zoomLevel = getZoomLevel(this.minBound, this.maxBound, MAP_WIDTH, MAP_HEIGHT);
     }
 
     /**
      * drawLines method draws all the road graph edges on the MapPane
      */
     public void drawLines() {
-        this.gc.clearRect(0, 0, this.mapWidth, this.mapHeight);
+        this.gc.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
         for (OSM_Edge osm_edge : this.osm_graph.getEdges()) {
             String roadType = osm_edge.getRoadType();
             int edgeMinZoomLevel = 0;
             switch (roadType){
                 case "road":
-                    edgeMinZoomLevel = this.minZoomLevel;
+                    edgeMinZoomLevel = MIN_ZOOM_LEVEL;
                     break;
                 case "linkRoad":
-                    edgeMinZoomLevel = 20;
+                    edgeMinZoomLevel = 16;
                     break;
                 case "specialRoad":
-                    edgeMinZoomLevel = 20;
+                    edgeMinZoomLevel = 16;
                     break;
             }
             if (edgeMinZoomLevel > this.zoomLevel){
@@ -71,12 +72,10 @@ public class MapPane extends Pane {
             OSM_Node startNode = osm_edge.getStartNode();
             OSM_Node endNode = osm_edge.getEndNode();
             if (this.isInsideWindow(startNode) || this.isInsideWindow(endNode)) {
-//                String roadType = osm_edge.getRoadType();
-                double startNodeX = this.convertLongitudeToX(startNode.getLongitude());
-                double startNodeY = this.convertLatitudeToY(startNode.getLatitude());
-                double endNodeX = this.convertLongitudeToX(endNode.getLongitude());
-                double endNodeY = this.convertLatitudeToY(endNode.getLatitude());
-//                this.drawLine(startNodeX, startNodeY, endNodeX, endNodeY, roadType);
+                double startNodeX = CoordinatesConverter.convertLongitudeToX(startNode.getLongitude(), this.zoomLevel);
+                double startNodeY = CoordinatesConverter.convertLatitudeToY(startNode.getLatitude(), this.zoomLevel);
+                double endNodeX = CoordinatesConverter.convertLongitudeToX(endNode.getLongitude(), this.zoomLevel);
+                double endNodeY = CoordinatesConverter.convertLatitudeToY(endNode.getLatitude(), this.zoomLevel);
 
                 // drawing in canvas
                 this.drawLineInCanvas(this.map, startNodeX, startNodeY, endNodeX, endNodeY, roadType);
@@ -86,10 +85,10 @@ public class MapPane extends Pane {
     }
 
     public void drawLineInCanvas(Canvas map, double startX, double startY, double endX, double endY, String roadType){
-        double x1 = this.convertXToFitWindow(startX);
-        double y1 = this.convertYToFitWindow(startY);
-        double x2 = this.convertXToFitWindow(endX);
-        double y2 = this.convertYToFitWindow(endY);
+        double x1 = CoordinatesConverter.scaleXToFitWindow(startX, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
+        double y1 = CoordinatesConverter.scaleYToFitWindow(startY, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
+        double x2 = CoordinatesConverter.scaleXToFitWindow(endX, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
+        double y2 = CoordinatesConverter.scaleYToFitWindow(endY, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
 
         switch (roadType) {
             case "road":
@@ -106,39 +105,6 @@ public class MapPane extends Pane {
                 break;
         }
         this.gc.strokeLine(x1, y1, x2, y2);
-    }
-
-    /**
-     * drawLine method draws one line based on the specified road type
-     *
-     * @param startX   start point x coordinate
-     * @param startY   start point y coordinate
-     * @param endX     end point x coordinate
-     * @param endY     end point y coordinate
-     * @param roadType road type of the specified edge being drawn
-     */
-    public void drawLine(double startX, double startY, double endX, double endY, String roadType) {
-        double x1 = this.convertXToFitWindow(startX);
-        double y1 = this.convertYToFitWindow(startY);
-        double x2 = this.convertXToFitWindow(endX);
-        double y2 = this.convertYToFitWindow(endY);
-        Line line = new Line(x1, y1, x2, y2);
-        switch (roadType) {
-            case "road":
-                line.setStroke(Color.SANDYBROWN);
-                line.setStrokeWidth(3);
-                break;
-            case "linkRoad":
-                line.setStroke(Color.SALMON);
-                line.setStrokeWidth(2);
-                break;
-            case "specialRoad":
-                line.setStroke(Color.PAPAYAWHIP);
-                line.setStrokeWidth(1);
-                //MOCCASIN
-                break;
-        }
-        this.getChildren().add(line);
     }
 
     /**
@@ -161,13 +127,13 @@ public class MapPane extends Pane {
      * @param yDelta y delta in XY coordinates
      */
     public void dragMapViewByVector(double xDelta, double yDelta) {
-        double xPercentageShift = xDelta / this.mapWidth;
-        double yPercentageShift = yDelta / this.mapHeight;
+        double xPercentageShift = xDelta / MAP_WIDTH;
+        double yPercentageShift = yDelta / MAP_HEIGHT;
 
-        double minBoundX = this.convertLongitudeToX(this.minBound.getX());
-        double minBoundY = this.convertLatitudeToY(this.minBound.getY());
-        double maxBoundX = this.convertLongitudeToX(this.maxBound.getX());
-        double maxBoundY = this.convertLatitudeToY(this.maxBound.getY());
+        double minBoundX = CoordinatesConverter.convertLongitudeToX(this.minBound.getX(), this.zoomLevel);
+        double minBoundY = CoordinatesConverter.convertLatitudeToY(this.minBound.getY(), this.zoomLevel);
+        double maxBoundX = CoordinatesConverter.convertLongitudeToX(this.maxBound.getX(), this.zoomLevel);
+        double maxBoundY = CoordinatesConverter.convertLatitudeToY(this.maxBound.getY(), this.zoomLevel);
 
         double viewWidthInPixels = maxBoundX - minBoundX;
         double viewHeightInPixels = maxBoundY - minBoundY;
@@ -191,17 +157,17 @@ public class MapPane extends Pane {
      * @param zoomSign if zooming in : 1 else -1
      */
     public void zoomMapView(int zoomSign) {
-        double newZoomLevel = this.zoomLevel + zoomSign;
-        if (newZoomLevel >= this.minZoomLevel && newZoomLevel <= this.maxZoomLevel) {
-            this.zoomLevel += zoomSign;
+        int newZoomLevel = this.zoomLevel + zoomSign;
+        if (newZoomLevel >= MIN_ZOOM_LEVEL && newZoomLevel <= MAX_ZOOM_LEVEL) {
+            this.zoomLevel = newZoomLevel;
         } else {
             return;
         }
 
-        double minBoundX = this.convertLongitudeToX(this.minBound.getX());
-        double minBoundY = this.convertLatitudeToY(this.minBound.getY());
-        double maxBoundX = this.convertLongitudeToX(this.maxBound.getX());
-        double maxBoundY = this.convertLatitudeToY(this.maxBound.getY());
+        double minBoundX = CoordinatesConverter.convertLongitudeToX(this.minBound.getX(), this.zoomLevel);
+        double minBoundY = CoordinatesConverter.convertLatitudeToY(this.minBound.getY(), this.zoomLevel);
+        double maxBoundX = CoordinatesConverter.convertLongitudeToX(this.maxBound.getX(), this.zoomLevel);
+        double maxBoundY = CoordinatesConverter.convertLatitudeToY(this.maxBound.getY(), this.zoomLevel);
 
         double viewWidthInPixels = maxBoundX - minBoundX;
         double viewHeightInPixels = maxBoundY - minBoundY;
@@ -230,8 +196,8 @@ public class MapPane extends Pane {
      */
     public void drawNodes() {
         for (OSM_Node node : this.osm_graph.getNodes().values()) {
-            double nodeX = this.convertLongitudeToX(node.getLongitude());
-            double nodeY = this.convertLatitudeToY(node.getLatitude());
+            double nodeX = CoordinatesConverter.convertLongitudeToX(node.getLongitude(), this.zoomLevel);
+            double nodeY = CoordinatesConverter.convertLatitudeToY(node.getLatitude(), this.zoomLevel);
             this.drawNode(nodeX, nodeY);
         }
     }
@@ -243,70 +209,23 @@ public class MapPane extends Pane {
      * @param y node y coordinate
      */
     public void drawNode(double x, double y) {
-        double x1 = this.convertXToFitWindow(x);
-        double y1 = this.convertYToFitWindow(y);
+        double x1 = CoordinatesConverter.scaleXToFitWindow(x, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
+        double y1 = CoordinatesConverter.scaleYToFitWindow(y, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
         Rectangle rectangle = new Rectangle(x1, y1, 5, 5);
         this.getChildren().add(rectangle);
     }
 
 
-    public double convertLongitudeToX(double longitude) {
-        return ((longitude + 180) / 360) * 256 * Math.pow(2, this.zoomLevel);
-    }
-
-
-    public double convertLatitudeToY(double latitude) {
-        double sinLatitude = Math.sin(latitude * Math.PI / 180);
-        return (0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI)) * 256 * Math.pow(2, this.zoomLevel);
-    }
-
-
-    public double convertXToLongitude(double x) {
-        return ((x / (256 * Math.pow(2, this.zoomLevel))) - 0.5) * 360;
-    }
-
-
-    public double convertYToLatitude(double y) {
-        return 90 - 360 * Math.atan(Math.exp(-(0.5 - (y / (256 * Math.pow(2, this.zoomLevel)))) * 2 * Math.PI)) / Math.PI;
-    }
-
-
-    /**
-     * Method which fits X global coordinate to window size
-     *
-     * @param x global coordinate
-     * @return x view local coordinate
-     */
-    public double convertXToFitWindow(double x) {
-        double minBoundX = this.convertLongitudeToX(this.minBound.getX());
-        double maxBoundX = this.convertLongitudeToX(this.maxBound.getX());
-        return ((x - minBoundX) / (maxBoundX - minBoundX)) * this.mapWidth;
-    }
-
-
-    /**
-     * Method which fits Y global coordinate to window size
-     *
-     * @param y global coordinate
-     * @return y view local coordinate
-     */
-    public double convertYToFitWindow(double y) {
-        double minBoundY = this.convertLatitudeToY(this.minBound.getY());
-        double maxBoundY = this.convertLatitudeToY(this.maxBound.getY());
-        return ((y - minBoundY) / (maxBoundY - minBoundY)) * this.mapHeight;
-    }
-
-
     private void setMinBound(double minBoundX, double minBoundY) {
-        double newMinBoundLongitude = this.convertXToLongitude(minBoundX);
-        double newMinBoundLatitude = this.convertYToLatitude(minBoundY);
+        double newMinBoundLongitude = CoordinatesConverter.convertXToLongitude(minBoundX, this.zoomLevel);
+        double newMinBoundLatitude = CoordinatesConverter.convertYToLatitude(minBoundY, this.zoomLevel);
         this.minBound = new Point2D(newMinBoundLongitude, newMinBoundLatitude);
     }
 
 
     private void setMaxBound(double maxBoundX, double maxBoundY) {
-        double newMaxBoundLongitude = this.convertXToLongitude(maxBoundX);
-        double newMaxBoundLatitude = this.convertYToLatitude(maxBoundY);
+        double newMaxBoundLongitude = CoordinatesConverter.convertXToLongitude(maxBoundX, this.zoomLevel);
+        double newMaxBoundLatitude = CoordinatesConverter.convertYToLatitude(maxBoundY, this.zoomLevel);
         this.maxBound = new Point2D(newMaxBoundLongitude, newMaxBoundLatitude);
     }
 }

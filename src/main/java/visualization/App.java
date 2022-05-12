@@ -5,6 +5,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import osm.OSM_Parser;
+import utils.CoordinatesConverter;
+import utils.ZoomDetector;
 
 /**
  * App class is the main class in the program
@@ -20,11 +22,12 @@ public class App extends Application {
         OSM_Graph osm_graph = OSM_Parser.CreateGraph("src\\main\\resources\\osm\\cracow.pbf");
 
         MapPane mapPane = new MapPane(osm_graph);
-//        mapPane.drawNodes();
+        mapPane.drawNodes();
         mapPane.drawLines();
 
         Scene scene = new Scene(mapPane);
         stage.setScene(scene);
+
         stage.show();
     }
 }
