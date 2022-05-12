@@ -22,7 +22,7 @@ public class App extends Application {
         OSM_Graph osm_graph = OSM_Parser.CreateGraph("src\\main\\resources\\osm\\cracow.pbf");
 
         MapPane mapPane = new MapPane(osm_graph);
-        mapPane.drawNodes();
+//        mapPane.drawNodes();
         mapPane.drawLines();
 
         Scene scene = new Scene(mapPane);

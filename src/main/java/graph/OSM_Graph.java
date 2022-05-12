@@ -8,8 +8,8 @@ import java.util.*;
  * OSM_Graph implements road graph
  */
 public class OSM_Graph {
-    private final ArrayList<OSM_Edge> OSM_Edges = new ArrayList<>();
     private final Map<Long, OSM_Node> OSM_nodes = new HashMap<>();
+    private final List<OSM_Way> OSM_Ways = new ArrayList<>();
 
     public OSM_Graph() {
     }
@@ -18,8 +18,8 @@ public class OSM_Graph {
         this.OSM_nodes.put(node.getId(), node);
     }
 
-    public void addEdge(OSM_Edge edge) {
-        this.OSM_Edges.add(edge);
+    public void addWay(OSM_Way way) {
+        this.OSM_Ways.add(way);
     }
 
     /**
@@ -68,13 +68,12 @@ public class OSM_Graph {
         return new Point2D(rightBound, bottomBound);
     }
 
-
     public Map<Long, OSM_Node> getNodes() {
         return this.OSM_nodes;
     }
 
-    public ArrayList<OSM_Edge> getEdges() {
-        return this.OSM_Edges;
+    public List<OSM_Way> getWays() {
+        return this.OSM_Ways;
     }
 
 
