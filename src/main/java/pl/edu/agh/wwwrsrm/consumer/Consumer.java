@@ -6,7 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
+//@Component
 public class Consumer {
 
     @KafkaListener(topics = "${topic.cars.name}", groupId = "${topic.cars.group}")
