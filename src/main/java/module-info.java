@@ -5,7 +5,7 @@ module SimulationVisualization {
     requires osmosis.core;
 
 
-    opens visualization to javafx.fxml;
-    exports visualization;
-    exports graph;
+    opens pl.edu.agh.wwwrsrm.visualization to javafx.fxml;
+    exports pl.edu.agh.wwwrsrm.visualization;
+    exports pl.edu.agh.wwwrsrm.graph;
 }

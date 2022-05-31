@@ -1,10 +1,10 @@
-package visualization;
+package pl.edu.agh.wwwrsrm.visualization;
 
-import graph.OSM_Graph;
+import pl.edu.agh.wwwrsrm.graph.OSM_Graph;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import osm.OSM_Parser;
+import pl.edu.agh.wwwrsrm.osm.OSM_Parser;
 
 /**
  * App class is the main class in the program
@@ -25,6 +25,7 @@ public class App extends Application {
 
         Scene scene = new Scene(mapPane);
         stage.setScene(scene);
+
         stage.show();
     }
 }

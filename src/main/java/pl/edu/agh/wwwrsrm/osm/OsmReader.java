@@ -1,4 +1,4 @@
-package osm;
+package pl.edu.agh.wwwrsrm.osm;
 
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
