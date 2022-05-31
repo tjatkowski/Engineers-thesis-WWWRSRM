@@ -1,10 +1,10 @@
 package pl.edu.agh.wwwrsrm.osm;
 
 import crosby.binary.osmosis.OsmosisReader;
-import pl.edu.agh.wwwrsrm.graph.OSM_Edge;
-import pl.edu.agh.wwwrsrm.graph.OSM_Graph;
-import pl.edu.agh.wwwrsrm.graph.OSM_Node;
-import pl.edu.agh.wwwrsrm.graph.OSM_Way;
+import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
+import pl.edu.agh.wwwrsrm.graph.GraphOSM;
+import pl.edu.agh.wwwrsrm.graph.NodeOSM;
+import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import javafx.scene.paint.Color;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
@@ -16,10 +16,10 @@ import java.io.FileNotFoundException;
 import java.util.Map;
 
 /**
- * OSM_Parser class parses nodes and ways read by OsmReader and creates road graph.
+ * osmParser class parses nodes and ways read by OsmReader and creates road graph.
  * Only ways with 'highway' key parameter and values indicating possibility of car driving on them are considered.
  */
-public class OSM_Parser {
+public class osmParser {
     public static final Map<String, WayParameters> roadZooms = Map.ofEntries(
             // roads
             Map.entry("motorway", new WayParameters(5, 3, Color.SANDYBROWN, "highway")),
@@ -74,7 +74,7 @@ public class OSM_Parser {
      * @param path path to OSM data .pbf file
      * @return road graph
      */
-    public static OSM_Graph CreateGraph(String path) {
+    public static GraphOSM CreateGraph(String path) {
         FileInputStream inputStream = null;
         try {
             System.out.println(path);
@@ -92,7 +92,7 @@ public class OSM_Parser {
         Map<Long, Node> allNodes = myOsmReader.getNodes();
         Map<Long, Way> allWays = myOsmReader.getWays();
 
-        OSM_Graph osm_graph = new OSM_Graph();
+        GraphOSM osm_graph = new GraphOSM();
 
         for (Way way : allWays.values()) {
             if (way.getWayNodes().size() < 2) {
@@ -110,18 +110,18 @@ public class OSM_Parser {
                 continue;
             }
 
-            OSM_Way osmWay;
-            if (!wayParameters.getType().equals("highway") && OSM_Way.checkIfClosed(way)) {
-                osmWay = new OSM_Way(true, wayParameters);
+            WayOSM osmWay;
+            if (!wayParameters.getType().equals("highway") && WayOSM.checkIfClosed(way)) {
+                osmWay = new WayOSM(true, wayParameters);
             } else {
-                osmWay = new OSM_Way(false, wayParameters);
+                osmWay = new WayOSM(false, wayParameters);
             }
 
-            way.getWayNodes().stream().map(WayNode::getNodeId).map(allNodes::get).map(OSM_Node::new)
+            way.getWayNodes().stream().map(WayNode::getNodeId).map(allNodes::get).map(NodeOSM::new)
                     .reduce((node1, node2) -> {
                         osm_graph.addNode(node1);
                         osm_graph.addNode(node2);
-                        osmWay.addEdge(new OSM_Edge(way.getId(), node1, node2));
+                        osmWay.addEdge(new EdgeOSM(way.getId(), node1, node2));
                         return node2;
                     });
             osm_graph.addWay(osmWay);

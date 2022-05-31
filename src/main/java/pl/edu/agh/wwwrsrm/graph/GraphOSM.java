@@ -1,53 +1,54 @@
 package pl.edu.agh.wwwrsrm.graph;
 
 import javafx.geometry.Point2D;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.*;
 
 /**
- * OSM_Graph implements road graph
+ * GraphOSM implements road graph
  */
-public class OSM_Graph {
-    private final Map<Long, OSM_Node> OSM_nodes = new HashMap<>();
-    private final List<OSM_Way> OSM_Ways = new ArrayList<>();
+@Getter
+@NoArgsConstructor
+public class GraphOSM {
+    private final Map<Long, NodeOSM> nodes = new HashMap<>();
+    private final List<WayOSM> ways = new ArrayList<>();
 
-    public OSM_Graph() {
+    public void addNode(NodeOSM node) {
+        this.nodes.put(node.getId(), node);
     }
 
-    public void addNode(OSM_Node node) {
-        this.OSM_nodes.put(node.getId(), node);
-    }
-
-    public void addWay(OSM_Way way) {
-        this.OSM_Ways.add(way);
+    public void addWay(WayOSM way) {
+        this.ways.add(way);
     }
 
     /**
      * @return road graph max Latitude coordinate
      */
     public Double getTopBound() {
-        return Collections.max(this.OSM_nodes.values(), Comparator.comparing(OSM_Node::getLatitude)).getLatitude();
+        return Collections.max(this.nodes.values(), Comparator.comparing(NodeOSM::getLatitude)).getLatitude();
     }
 
     /**
      * @return road graph min Longitude coordinate
      */
     public Double getLeftBound() {
-        return Collections.min(this.OSM_nodes.values(), Comparator.comparing(OSM_Node::getLongitude)).getLongitude();
+        return Collections.min(this.nodes.values(), Comparator.comparing(NodeOSM::getLongitude)).getLongitude();
     }
 
     /**
      * @return road graph min Latitude coordinate
      */
     public Double getBottomBound() {
-        return Collections.min(this.OSM_nodes.values(), Comparator.comparing(OSM_Node::getLatitude)).getLatitude();
+        return Collections.min(this.nodes.values(), Comparator.comparing(NodeOSM::getLatitude)).getLatitude();
     }
 
     /**
      * @return road graph max Longitude coordinate
      */
     public Double getRightBound() {
-        return Collections.max(this.OSM_nodes.values(), Comparator.comparing(OSM_Node::getLongitude)).getLongitude();
+        return Collections.max(this.nodes.values(), Comparator.comparing(NodeOSM::getLongitude)).getLongitude();
     }
 
     /**
@@ -67,14 +68,4 @@ public class OSM_Graph {
         Double rightBound = this.getRightBound();
         return new Point2D(rightBound, bottomBound);
     }
-
-    public Map<Long, OSM_Node> getNodes() {
-        return this.OSM_nodes;
-    }
-
-    public List<OSM_Way> getWays() {
-        return this.OSM_Ways;
-    }
-
-
 }
