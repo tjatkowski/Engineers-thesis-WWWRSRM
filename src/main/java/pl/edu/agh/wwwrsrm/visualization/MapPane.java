@@ -1,9 +1,9 @@
 package pl.edu.agh.wwwrsrm.visualization;
 
-import pl.edu.agh.wwwrsrm.graph.OSM_Edge;
-import pl.edu.agh.wwwrsrm.graph.OSM_Graph;
-import pl.edu.agh.wwwrsrm.graph.OSM_Node;
-import pl.edu.agh.wwwrsrm.graph.OSM_Way;
+import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
+import pl.edu.agh.wwwrsrm.graph.GraphOSM;
+import pl.edu.agh.wwwrsrm.graph.NodeOSM;
+import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,7 +27,7 @@ import static pl.edu.agh.wwwrsrm.utils.ZoomDetector.getZoomLevel;
  * MapPane class does visualization of the road graph
  */
 public class MapPane extends Pane {
-    private OSM_Graph osm_graph;
+    private GraphOSM osm_graph;
     private Point2D minBound;
     private Point2D maxBound;
     private static final int MAP_WIDTH = 1280;
@@ -47,7 +47,7 @@ public class MapPane extends Pane {
         this.gc = map.getGraphicsContext2D();
     }
 
-    public MapPane(OSM_Graph osm_graph) {
+    public MapPane(GraphOSM osm_graph) {
         this();
         this.osm_graph = osm_graph;
         this.minBound = this.osm_graph.getTopLeftBound();
@@ -60,7 +60,7 @@ public class MapPane extends Pane {
      */
     public void drawLines() {
         this.gc.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
-        for (OSM_Way way : this.osm_graph.getWays()) {
+        for (WayOSM way : this.osm_graph.getWays()) {
             WayParameters wayParameters = way.getEdgeParameter();
             int wayMinZoomLevel = wayParameters.getZoomLevel();
             int wayWidth = wayParameters.getWayWidth();
@@ -71,9 +71,9 @@ public class MapPane extends Pane {
             }
 
             if (!way.isClosed()) {
-                for (OSM_Edge edge : way.getEdges()) {
-                    OSM_Node startNode = edge.getStartNode();
-                    OSM_Node endNode = edge.getEndNode();
+                for (EdgeOSM edge : way.getEdges()) {
+                    NodeOSM startNode = edge.getStartNode();
+                    NodeOSM endNode = edge.getEndNode();
                     if (this.isInsideWindow(startNode) || this.isInsideWindow(endNode)) {
                         double startNodeX = CoordinatesConverter.convertLongitudeToX(startNode.getLongitude(), this.zoomLevel);
                         double startNodeY = CoordinatesConverter.convertLatitudeToY(startNode.getLatitude(), this.zoomLevel);
@@ -87,7 +87,7 @@ public class MapPane extends Pane {
             } else {
                 List<Double> xPoints = new ArrayList<>();
                 List<Double> yPoints = new ArrayList<>();
-                OSM_Node firstNode = way.getEdges().get(0).getStartNode();
+                NodeOSM firstNode = way.getEdges().get(0).getStartNode();
                 if (!this.isInsideWindow(firstNode)) {
                     continue;
                 }
@@ -95,7 +95,7 @@ public class MapPane extends Pane {
                 xPoints.add(CoordinatesConverter.convertLongitudeToX(firstNode.getLongitude(), this.zoomLevel));
                 yPoints.add(CoordinatesConverter.convertLatitudeToY(firstNode.getLatitude(), this.zoomLevel));
 
-                Stream<OSM_Node> nodes = way.getEdges().stream().map(OSM_Edge::getEndNode);
+                Stream<NodeOSM> nodes = way.getEdges().stream().map(EdgeOSM::getEndNode);
                 if (!nodes.allMatch(this::isInsideWindow)) {
                     continue;
                 }
@@ -138,10 +138,10 @@ public class MapPane extends Pane {
     /**
      * Util method which checks if node in degree coordinates is inside map boundaries.
      *
-     * @param osm_node OSM_Node
+     * @param osm_node NodeOSM
      * @return true if node is inside map boundaries
      */
-    public boolean isInsideWindow(OSM_Node osm_node) {
+    public boolean isInsideWindow(NodeOSM osm_node) {
         return osm_node.getLongitude() >= this.minBound.getX()
                 && osm_node.getLatitude() <= this.minBound.getY()
                 && osm_node.getLongitude() <= this.maxBound.getX()
@@ -223,7 +223,7 @@ public class MapPane extends Pane {
      * drawNodes method draws all the road graph nodes on the MapPane
      */
     public void drawNodes() {
-        for (OSM_Node node : this.osm_graph.getNodes().values()) {
+        for (NodeOSM node : this.osm_graph.getNodes().values()) {
             double nodeX = CoordinatesConverter.convertLongitudeToX(node.getLongitude(), this.zoomLevel);
             double nodeY = CoordinatesConverter.convertLatitudeToY(node.getLatitude(), this.zoomLevel);
             this.drawNode(nodeX, nodeY);

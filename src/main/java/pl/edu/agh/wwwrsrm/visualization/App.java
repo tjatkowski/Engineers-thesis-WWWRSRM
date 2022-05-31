@@ -1,14 +1,16 @@
 package pl.edu.agh.wwwrsrm.visualization;
 
-import pl.edu.agh.wwwrsrm.graph.OSM_Graph;
+import org.springframework.stereotype.Service;
+import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import pl.edu.agh.wwwrsrm.osm.OSM_Parser;
+import pl.edu.agh.wwwrsrm.osm.osmParser;
 
 /**
  * App class is the main class in the program
  */
+@Service
 public class App extends Application {
 
     public static void main(String[] args) {
@@ -17,7 +19,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        OSM_Graph osm_graph = OSM_Parser.CreateGraph("src\\main\\resources\\osm\\cracow.pbf");
+        GraphOSM osm_graph = osmParser.CreateGraph("src\\main\\resources\\osm\\cracow.pbf");
 
         MapPane mapPane = new MapPane(osm_graph);
 //        mapPane.drawNodes();

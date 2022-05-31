@@ -1,6 +1,7 @@
 package pl.edu.agh.wwwrsrm.osm;
 
 
+import lombok.Getter;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
@@ -16,9 +17,10 @@ import java.util.Map;
  * It reads OSM data in .pbf format and stores all the nodes and ways which
  * can be accesses by getNodes and gedWays methods.
  */
+@Getter
 public class OsmReader implements Sink {
-    private Map<Long, Node> nodes = new HashMap<>();
-    private Map<Long, Way> ways = new HashMap<>();
+    private final Map<Long, Node> nodes = new HashMap<>();
+    private final Map<Long, Way> ways = new HashMap<>();
 
 
     @Override
@@ -31,15 +33,6 @@ public class OsmReader implements Sink {
             this.ways.put(way.getId(), way);
         }
     }
-
-    public Map<Long, Node> getNodes() {
-        return this.nodes;
-    }
-
-    public Map<Long, Way> getWays() {
-        return this.ways;
-    }
-
 
     @Override
     public void initialize(Map<String, Object> map) {
