@@ -1,7 +1,10 @@
-package utils;
+package pl.edu.agh.wwwrsrm.utils;
 
 import javafx.geometry.Point2D;
 
+/**
+ * ZoomDetector class detect zoom level when map is loaded.
+ */
 public class ZoomDetector {
     private static final double PI = Math.PI;
     private static final int R = 6378137;

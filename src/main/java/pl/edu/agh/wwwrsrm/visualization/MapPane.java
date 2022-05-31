@@ -1,9 +1,9 @@
-package visualization;
+package pl.edu.agh.wwwrsrm.visualization;
 
-import graph.OSM_Edge;
-import graph.OSM_Graph;
-import graph.OSM_Node;
-import graph.OSM_Way;
+import pl.edu.agh.wwwrsrm.graph.OSM_Edge;
+import pl.edu.agh.wwwrsrm.graph.OSM_Graph;
+import pl.edu.agh.wwwrsrm.graph.OSM_Node;
+import pl.edu.agh.wwwrsrm.graph.OSM_Way;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,8 +12,8 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import osm.WayParameters;
-import utils.CoordinatesConverter;
+import pl.edu.agh.wwwrsrm.osm.WayParameters;
+import pl.edu.agh.wwwrsrm.utils.CoordinatesConverter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static utils.ZoomDetector.getZoomLevel;
+import static pl.edu.agh.wwwrsrm.utils.ZoomDetector.getZoomLevel;
 
 /**
  * MapPane class does visualization of the road graph

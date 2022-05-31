@@ -1,10 +1,10 @@
-package osm;
+package pl.edu.agh.wwwrsrm.osm;
 
 import crosby.binary.osmosis.OsmosisReader;
-import graph.OSM_Edge;
-import graph.OSM_Graph;
-import graph.OSM_Node;
-import graph.OSM_Way;
+import pl.edu.agh.wwwrsrm.graph.OSM_Edge;
+import pl.edu.agh.wwwrsrm.graph.OSM_Graph;
+import pl.edu.agh.wwwrsrm.graph.OSM_Node;
+import pl.edu.agh.wwwrsrm.graph.OSM_Way;
 import javafx.scene.paint.Color;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;

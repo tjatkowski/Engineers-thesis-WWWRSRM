@@ -1,4 +1,4 @@
-package osm;
+package pl.edu.agh.wwwrsrm.osm;
 
 import javafx.scene.paint.Color;
 

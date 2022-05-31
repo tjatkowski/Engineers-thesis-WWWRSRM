@@ -1,4 +1,4 @@
-package graph;
+package pl.edu.agh.wwwrsrm.graph;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 

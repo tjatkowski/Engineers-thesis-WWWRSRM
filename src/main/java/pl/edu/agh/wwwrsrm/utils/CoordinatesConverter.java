@@ -1,4 +1,4 @@
-package utils;
+package pl.edu.agh.wwwrsrm.utils;
 
 import javafx.geometry.Point2D;
 

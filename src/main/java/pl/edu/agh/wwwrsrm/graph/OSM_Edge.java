@@ -1,4 +1,4 @@
-package graph;
+package pl.edu.agh.wwwrsrm.graph;
 
 /**
  * OSM_Edge class implements road graph edge

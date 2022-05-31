@@ -1,4 +1,4 @@
-package graph;
+package pl.edu.agh.wwwrsrm.graph;
 
 import javafx.geometry.Point2D;
 

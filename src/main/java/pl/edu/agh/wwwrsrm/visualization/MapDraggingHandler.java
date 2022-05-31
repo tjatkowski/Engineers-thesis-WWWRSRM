@@ -1,4 +1,4 @@
-package visualization;
+package pl.edu.agh.wwwrsrm.visualization;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;

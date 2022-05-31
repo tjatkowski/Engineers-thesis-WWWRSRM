@@ -1,8 +1,8 @@
-package graph;
+package pl.edu.agh.wwwrsrm.graph;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import osm.WayParameters;
+import pl.edu.agh.wwwrsrm.osm.WayParameters;
 
 import java.util.ArrayList;
 import java.util.List;

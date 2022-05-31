@@ -1,12 +1,10 @@
-package visualization;
+package pl.edu.agh.wwwrsrm.visualization;
 
-import graph.OSM_Graph;
+import pl.edu.agh.wwwrsrm.graph.OSM_Graph;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import osm.OSM_Parser;
-import utils.CoordinatesConverter;
-import utils.ZoomDetector;
+import pl.edu.agh.wwwrsrm.osm.OSM_Parser;
 
 /**
  * App class is the main class in the program
