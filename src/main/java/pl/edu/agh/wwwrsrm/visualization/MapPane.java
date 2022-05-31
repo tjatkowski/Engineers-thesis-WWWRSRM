@@ -1,5 +1,6 @@
 package pl.edu.agh.wwwrsrm.visualization;
 
+import lombok.Setter;
 import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;

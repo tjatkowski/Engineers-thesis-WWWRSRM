@@ -2,16 +2,14 @@ package pl.edu.agh.wwwrsrm.visualization;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.ScrollEvent;
+import lombok.AllArgsConstructor;
 
 /**
  * MapZoomHandler handles Scroll event to zoom in and zoom out the map view.
  */
+@AllArgsConstructor
 public class MapZoomHandler implements EventHandler<ScrollEvent> {
     private final MapPane mapPane;
-
-    public MapZoomHandler(MapPane mapPane){
-        this.mapPane = mapPane;
-    }
 
     @Override
     public void handle(ScrollEvent scrollEvent) {
