@@ -16,7 +16,7 @@ import java.util.Map;
 
 import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 
-//@Configuration
+@Configuration
 public class ConsumerConfiguration {
 
     @Value("${spring.kafka.bootstrap-server}")

@@ -9,7 +9,7 @@ module SimulationVisualization {
     requires javafx.fxml;
     requires osmosis.pbf;
     requires osmosis.core;
-    requires lombok;
+    requires static lombok;
     requires org.slf4j;
     requires kafka.clients;
     requires java.sql;
