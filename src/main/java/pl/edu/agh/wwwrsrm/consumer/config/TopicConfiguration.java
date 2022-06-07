@@ -8,19 +8,23 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class TopicConfiguration {
 
+    public static final String CARS_TOPIC = "cars";
+    public static final String JUNCTIONS_TOPIC = "junctions";
+    public static final String LANES_TOPIC = "lanes";
+
     @Bean
     public NewTopic carsTopic() {
-        return TopicBuilder.name("${topic.cars.name}").partitions(1).replicas(1).build();
+        return TopicBuilder.name(CARS_TOPIC).partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic junctionsTopic() {
-        return TopicBuilder.name("${topic.junctions.name}").partitions(1).replicas(1).build();
+        return TopicBuilder.name(JUNCTIONS_TOPIC).partitions(1).replicas(1).build();
     }
 
     @Bean
     public NewTopic lanesTopic() {
-        return TopicBuilder.name("${topic.lanes.name}").partitions(1).replicas(1).build();
+        return TopicBuilder.name(LANES_TOPIC).partitions(1).replicas(1).build();
     }
 }
 

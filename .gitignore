@@ -1,4 +1,6 @@
 # IntelliJ
 /.idea
 /target
-SimulationVisualization.iml
+*.iws
+*.iml
+*.ipr
