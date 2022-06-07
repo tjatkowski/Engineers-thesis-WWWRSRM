@@ -31,13 +31,15 @@ public class MapPane extends Pane {
     private GraphOSM osm_graph;
     private Point2D minBound;
     private Point2D maxBound;
-    private static final int MAP_WIDTH = 1280;
-    private static final int MAP_HEIGHT = 720;
+    private static final int MAP_WIDTH = 1100;
+    private static final int MAP_HEIGHT = 800;
     private static final int MIN_ZOOM_LEVEL = 1;
     private static final int MAX_ZOOM_LEVEL = 23;
     private int zoomLevel;
     private final GraphicsContext gc;
     private final Canvas map;
+
+    private Pane configPane;
 
     public MapPane() {
         this.setPrefSize(MAP_WIDTH, MAP_HEIGHT);
