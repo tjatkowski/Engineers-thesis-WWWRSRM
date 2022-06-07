@@ -4,23 +4,24 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import static pl.edu.agh.wwwrsrm.consumer.config.TopicConfiguration.*;
 
 @Slf4j
 @Component
 public class Consumer {
 
-    @KafkaListener(topics = "${topic.cars.name}", groupId = "${topic.cars.group}")
+    @KafkaListener(topics = CARS_TOPIC, groupId = CARS_TOPIC)
     void carsListener(ConsumerRecord<String, String> data) {
-        log.info("Received car:" + data.value());
+        log.info("Received car[{}]:{}",data.offset(), data.value());
     }
 
-    @KafkaListener(topics = "${topic.junctions.name}", groupId = "${topic.junctions.group}")
+    @KafkaListener(topics = JUNCTIONS_TOPIC, groupId = JUNCTIONS_TOPIC)
     void junctionsListener(ConsumerRecord<String, String> data) {
-        log.info("Received junction: " + data.value());
+        log.info("Received junction[{}]:{}",data.offset(), data.value());
     }
 
-    @KafkaListener(topics = "${topic.lanes.name}", groupId = "${topic.lanes.group}")
+    @KafkaListener(topics = LANES_TOPIC, groupId = LANES_TOPIC)
     void lanesListener(ConsumerRecord<String, String> data) {
-        log.info("Received lane: " + data.value());
+        log.info("Received lane[{}]:{} ", data.offset(), data.value());
     }
 }
