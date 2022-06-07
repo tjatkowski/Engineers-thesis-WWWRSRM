@@ -32,7 +32,7 @@ public class MapPane extends Pane {
     private Point2D minBound;
     private Point2D maxBound;
     private static final int MAP_WIDTH = 1100;
-    private static final int MAP_HEIGHT = 780;
+    private static final int MAP_HEIGHT = 800;
     private static final int MIN_ZOOM_LEVEL = 1;
     private static final int MAX_ZOOM_LEVEL = 23;
     private int zoomLevel;
