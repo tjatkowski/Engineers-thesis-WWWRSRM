@@ -13,6 +13,7 @@ module SimulationVisualization {
     requires org.slf4j;
     requires kafka.clients;
     requires java.sql;
+    requires com.google.protobuf;
 
 
     opens pl.edu.agh.wwwrsrm.visualization to javafx.fxml;
@@ -25,4 +26,5 @@ module SimulationVisualization {
     exports pl.edu.agh.wwwrsrm.graph;
     exports pl.edu.agh.wwwrsrm.osm;
     exports pl.edu.agh.wwwrsrm;
+    exports proto.model;
 }
