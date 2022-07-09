@@ -4,11 +4,15 @@ spring:
     consumer:
       group-id: cars_group
       auto-offset-reset: earliest
+      enable-auto-commit: true
+      auto-commit-interval: 5
       key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
       properties:
         spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
-        spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer
 
-#spring.json.trusted.packages: "*"
-# org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      schema.registry.url: http://localhost:8081
+      auto.register.schemas: true
+      specific.protobuf.value.type: proto.model.CarMessage

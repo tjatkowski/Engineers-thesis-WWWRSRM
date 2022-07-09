@@ -1,10 +1,5 @@
 package pl.edu.agh.wwwrsrm.visualization;
 
-import lombok.Setter;
-import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
-import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.graph.NodeOSM;
-import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,13 +7,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
+import pl.edu.agh.wwwrsrm.graph.GraphOSM;
+import pl.edu.agh.wwwrsrm.graph.NodeOSM;
+import pl.edu.agh.wwwrsrm.graph.WayOSM;
+import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.osm.WayParameters;
 import pl.edu.agh.wwwrsrm.utils.CoordinatesConverter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,6 +38,10 @@ public class MapPane extends Pane {
 
     private Pane configPane;
 
+    //    private final Map<String, EdgeOSM> laneIdsMapper = new HashMap<>();
+    private final Map<String, WayOSM> wayIdsMapper = new HashMap<>();
+    private final Map<String, Car> cars = new HashMap<>();
+
     public MapPane() {
         this.setPrefSize(MAP_WIDTH, MAP_HEIGHT);
         this.setStyle("-fx-background-color: #808080;");
@@ -57,6 +58,7 @@ public class MapPane extends Pane {
         this.maxBound = this.osm_graph.getBottomRightBound();
         this.zoomLevel = getZoomLevel(this.minBound, this.maxBound, MAP_WIDTH, MAP_HEIGHT);
     }
+
 
     /**
      * drawLines method draws all the road graph edges on the MapPane
@@ -113,8 +115,8 @@ public class MapPane extends Pane {
                 this.drawPolygonInCanvas(xPoints.stream().mapToDouble(Double::doubleValue).toArray(),
                         yPoints.stream().mapToDouble(Double::doubleValue).toArray(), wayColor);
             }
-
         }
+        this.drawCars();
         this.getChildren().add(this.map);
     }
 
@@ -233,6 +235,59 @@ public class MapPane extends Pane {
         }
     }
 
+    // TODO change
+    public void drawCars() {
+        for (Car car : this.cars.values()) {
+            this.drawCar(car);
+        }
+    }
+
+    // TODO change
+    public void updateCar(Car car) {
+        this.cars.put(car.getCarId(), car);
+    }
+
+    /**
+     * drawCar method draw car on the MapPane
+     */
+    // TODO change
+    public void drawCar(Car car) {
+        String laneId = car.getLaneId();
+        double positionOnLane = car.getPositionOnLane();
+
+        if (!this.wayIdsMapper.containsKey(laneId)) {
+            WayOSM randomWayOSM;
+            do {
+                int randomWayIdx = getRandomIndex(0, this.osm_graph.getWays().size());
+                randomWayOSM = this.osm_graph.getWays().get(randomWayIdx);
+            } while (randomWayOSM.isClosed());
+            this.wayIdsMapper.put(laneId, randomWayOSM);
+        }
+
+        WayOSM wayOSM = this.wayIdsMapper.get(laneId);
+        NodeOSM startingNode = wayOSM.getEdges().get(0).getStartNode();
+        NodeOSM endingNode = wayOSM.getEdges().get(wayOSM.getEdges().size() - 1).getEndNode();
+
+        double startingNodeX = CoordinatesConverter.convertLongitudeToX(startingNode.getLongitude(), this.zoomLevel);
+        double startingNodeY = CoordinatesConverter.convertLatitudeToY(startingNode.getLatitude(), this.zoomLevel);
+
+        double endingNodeX = CoordinatesConverter.convertLongitudeToX(endingNode.getLongitude(), this.zoomLevel);
+        double endingNodeY = CoordinatesConverter.convertLatitudeToY(endingNode.getLatitude(), this.zoomLevel);
+
+        System.out.println(Math.sqrt(Math.pow(endingNodeX - startingNodeX, 2) + Math.pow(endingNodeY - startingNodeY, 2)) + " -> " + positionOnLane);
+
+        double carX = startingNodeX + positionOnLane * (endingNodeX - startingNodeX);
+        double carY = startingNodeY + positionOnLane * (endingNodeY - startingNodeY);
+
+        this.drawNode(carX, carY);
+    }
+
+    // TODO remove
+    public static int getRandomIndex(int min, int max) {
+        return ((int) (Math.random() * (max - min))) + min;
+    }
+
+
     /**
      * drawNode method draws one node
      *
@@ -242,17 +297,15 @@ public class MapPane extends Pane {
     public void drawNode(double x, double y) {
         double x1 = CoordinatesConverter.scaleXToFitWindow(x, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
         double y1 = CoordinatesConverter.scaleYToFitWindow(y, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
-        Rectangle rectangle = new Rectangle(x1, y1, 5, 5);
-        this.getChildren().add(rectangle);
+        this.gc.setFill(Color.RED);
+        this.gc.fillRect(x1, y1, 10, 10);
     }
-
 
     private void setMinBound(double minBoundX, double minBoundY) {
         double newMinBoundLongitude = CoordinatesConverter.convertXToLongitude(minBoundX, this.zoomLevel);
         double newMinBoundLatitude = CoordinatesConverter.convertYToLatitude(minBoundY, this.zoomLevel);
         this.minBound = new Point2D(newMinBoundLongitude, newMinBoundLatitude);
     }
-
 
     private void setMaxBound(double maxBoundX, double maxBoundY) {
         double newMaxBoundLongitude = CoordinatesConverter.convertXToLongitude(maxBoundX, this.zoomLevel);
