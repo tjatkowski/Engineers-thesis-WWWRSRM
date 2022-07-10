@@ -4,6 +4,7 @@ import javafx.concurrent.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.consumer.Consumer;
 import pl.edu.agh.wwwrsrm.events.ApplicationRunEvent;
 import pl.edu.agh.wwwrsrm.model.Car;

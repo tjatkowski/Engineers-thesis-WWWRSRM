@@ -1,6 +1,5 @@
 package pl.edu.agh.wwwrsrm.visualization;
 
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -13,50 +12,42 @@ import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.osm.WayParameters;
-import pl.edu.agh.wwwrsrm.utils.CoordinatesConverter;
+import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
+import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static pl.edu.agh.wwwrsrm.utils.ZoomDetector.getZoomLevel;
 
 /**
  * MapPane class does visualization of the road graph
  */
 public class MapPane extends Pane {
-    private GraphOSM osm_graph;
-    private Point2D minBound;
-    private Point2D maxBound;
     private static final int MAP_WIDTH = 1100;
     private static final int MAP_HEIGHT = 800;
-    private static final int MIN_ZOOM_LEVEL = 1;
-    private static final int MAX_ZOOM_LEVEL = 23;
-    private int zoomLevel;
+    private final GraphOSM osm_graph;
+    private final MapWindow mapWindow;
     private final GraphicsContext gc;
     private final Canvas map;
 
     private Pane configPane;
 
-    //    private final Map<String, EdgeOSM> laneIdsMapper = new HashMap<>();
     private final Map<String, WayOSM> wayIdsMapper = new HashMap<>();
     private final Map<String, Car> cars = new HashMap<>();
 
-    public MapPane() {
+    public MapPane(GraphOSM osm_graph) {
         this.setPrefSize(MAP_WIDTH, MAP_HEIGHT);
         this.setStyle("-fx-background-color: #808080;");
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
+        this.osm_graph = osm_graph;
+        this.mapWindow = new MapWindow(osm_graph.getTopLeftBound(), osm_graph.getBottomRightBound(), MAP_WIDTH, MAP_HEIGHT);
         this.map = new Canvas(MAP_WIDTH, MAP_HEIGHT);
         this.gc = map.getGraphicsContext2D();
-    }
-
-    public MapPane(GraphOSM osm_graph) {
-        this();
-        this.osm_graph = osm_graph;
-        this.minBound = this.osm_graph.getTopLeftBound();
-        this.maxBound = this.osm_graph.getBottomRightBound();
-        this.zoomLevel = getZoomLevel(this.minBound, this.maxBound, MAP_WIDTH, MAP_HEIGHT);
     }
 
 
@@ -64,14 +55,14 @@ public class MapPane extends Pane {
      * drawLines method draws all the road graph edges on the MapPane
      */
     public void drawLines() {
-        this.gc.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
-        for (WayOSM way : this.osm_graph.getWays()) {
+        gc.clearRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
+        for (WayOSM way : osm_graph.getWays()) {
             WayParameters wayParameters = way.getEdgeParameter();
             int wayMinZoomLevel = wayParameters.getZoomLevel();
             int wayWidth = wayParameters.getWayWidth();
             Color wayColor = wayParameters.getColor();
 
-            if (wayMinZoomLevel > this.zoomLevel) {
+            if (wayMinZoomLevel > mapWindow.getZoomLevel()) {
                 continue;
             }
 
@@ -79,78 +70,51 @@ public class MapPane extends Pane {
                 for (EdgeOSM edge : way.getEdges()) {
                     NodeOSM startNode = edge.getStartNode();
                     NodeOSM endNode = edge.getEndNode();
-                    if (this.isInsideWindow(startNode) || this.isInsideWindow(endNode)) {
-                        double startNodeX = CoordinatesConverter.convertLongitudeToX(startNode.getLongitude(), this.zoomLevel);
-                        double startNodeY = CoordinatesConverter.convertLatitudeToY(startNode.getLatitude(), this.zoomLevel);
-                        double endNodeX = CoordinatesConverter.convertLongitudeToX(endNode.getLongitude(), this.zoomLevel);
-                        double endNodeY = CoordinatesConverter.convertLatitudeToY(endNode.getLatitude(), this.zoomLevel);
-
+                    if (mapWindow.isInsideWindow(startNode.getCoordinate()) || mapWindow.isInsideWindow(endNode.getCoordinate())) {
+                        WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
+                        WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
                         // drawing in canvas
-                        this.drawLineInCanvas(startNodeX, startNodeY, endNodeX, endNodeY, wayWidth, wayColor);
+                        this.drawLineInCanvas(startNodeWindowXY, endNodeWindowXY, wayWidth, wayColor);
                     }
                 }
             } else {
-                List<Double> xPoints = new ArrayList<>();
-                List<Double> yPoints = new ArrayList<>();
                 NodeOSM firstNode = way.getEdges().get(0).getStartNode();
-                if (!this.isInsideWindow(firstNode)) {
+                if (!mapWindow.isInsideWindow(firstNode.getCoordinate())) {
                     continue;
                 }
 
-                xPoints.add(CoordinatesConverter.convertLongitudeToX(firstNode.getLongitude(), this.zoomLevel));
-                yPoints.add(CoordinatesConverter.convertLatitudeToY(firstNode.getLatitude(), this.zoomLevel));
+                List<WindowXYCoordinate> points = new ArrayList<>();
+                points.add(firstNode.getCoordinate().convertToWindowXY(mapWindow));
 
                 Stream<NodeOSM> nodes = way.getEdges().stream().map(EdgeOSM::getEndNode);
-                if (!nodes.allMatch(this::isInsideWindow)) {
+                if (!nodes.map(NodeOSM::getCoordinate).allMatch(mapWindow::isInsideWindow)) {
                     continue;
                 }
 
-                xPoints.addAll(way.getEdges().stream().map(edge -> edge.getEndNode().getLongitude())
-                        .map(longitude -> CoordinatesConverter.convertLongitudeToX(longitude, this.zoomLevel))
-                        .collect(Collectors.toList()));
-                yPoints.addAll(way.getEdges().stream().map(edge -> edge.getEndNode().getLatitude())
-                        .map(latitude -> CoordinatesConverter.convertLatitudeToY(latitude, this.zoomLevel))
+                points.addAll(way.getEdges().stream()
+                        .map(EdgeOSM::getEndNode)
+                        .map(NodeOSM::getCoordinate)
+                        .map(coordinate -> coordinate.convertToWindowXY(mapWindow))
                         .collect(Collectors.toList()));
 
-                this.drawPolygonInCanvas(xPoints.stream().mapToDouble(Double::doubleValue).toArray(),
-                        yPoints.stream().mapToDouble(Double::doubleValue).toArray(), wayColor);
+                this.drawPolygonInCanvas(points.stream().map(WindowXYCoordinate::getX).mapToDouble(Integer::doubleValue).toArray(),
+                        points.stream().map(WindowXYCoordinate::getY).mapToDouble(Integer::doubleValue).toArray(), wayColor);
             }
         }
         this.drawCars();
         this.getChildren().add(this.map);
     }
 
-    public void drawLineInCanvas(double startX, double startY, double endX, double endY, int width, Color color) {
-        double x1 = CoordinatesConverter.scaleXToFitWindow(startX, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
-        double y1 = CoordinatesConverter.scaleYToFitWindow(startY, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
-        double x2 = CoordinatesConverter.scaleXToFitWindow(endX, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
-        double y2 = CoordinatesConverter.scaleYToFitWindow(endY, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
+    public void drawLineInCanvas(WindowXYCoordinate startPoint, WindowXYCoordinate endPoint, int width, Color color) {
         this.gc.setStroke(color);
         this.gc.setLineWidth(width);
-        this.gc.strokeLine(x1, y1, x2, y2);
+        this.gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
     }
 
     public void drawPolygonInCanvas(double[] xPoints, double[] yPoints, Color color) {
         int n = xPoints.length;
-
-        double[] xScaled = Arrays.stream(xPoints).map(x -> CoordinatesConverter.scaleXToFitWindow(x, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel)).toArray();
-        double[] yScaled = Arrays.stream(yPoints).map(y -> CoordinatesConverter.scaleYToFitWindow(y, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel)).toArray();
-
         this.gc.setFill(color);
-        this.gc.fillPolygon(xScaled, yScaled, n);
-    }
-
-    /**
-     * Util method which checks if node in degree coordinates is inside map boundaries.
-     *
-     * @param osm_node NodeOSM
-     * @return true if node is inside map boundaries
-     */
-    public boolean isInsideWindow(NodeOSM osm_node) {
-        return osm_node.getLongitude() >= this.minBound.getX()
-                && osm_node.getLatitude() <= this.minBound.getY()
-                && osm_node.getLongitude() <= this.maxBound.getX()
-                && osm_node.getLatitude() >= this.maxBound.getY();
+        this.gc.fillPolygon(xPoints, yPoints, n);
     }
 
     /**
@@ -160,29 +124,10 @@ public class MapPane extends Pane {
      * @param yDelta y delta in XY coordinates
      */
     public void dragMapViewByVector(double xDelta, double yDelta) {
-        double xPercentageShift = xDelta / MAP_WIDTH;
-        double yPercentageShift = yDelta / MAP_HEIGHT;
-
-        double minBoundX = CoordinatesConverter.convertLongitudeToX(this.minBound.getX(), this.zoomLevel);
-        double minBoundY = CoordinatesConverter.convertLatitudeToY(this.minBound.getY(), this.zoomLevel);
-        double maxBoundX = CoordinatesConverter.convertLongitudeToX(this.maxBound.getX(), this.zoomLevel);
-        double maxBoundY = CoordinatesConverter.convertLatitudeToY(this.maxBound.getY(), this.zoomLevel);
-
-        double viewWidthInPixels = maxBoundX - minBoundX;
-        double viewHeightInPixels = maxBoundY - minBoundY;
-
-        minBoundX -= xPercentageShift * viewWidthInPixels;
-        minBoundY -= yPercentageShift * viewHeightInPixels;
-        maxBoundX -= xPercentageShift * viewWidthInPixels;
-        maxBoundY -= yPercentageShift * viewHeightInPixels;
-
-        this.setMinBound(minBoundX, minBoundY);
-        this.setMaxBound(maxBoundX, maxBoundY);
-
+        mapWindow.dragMapWindowByVector(xDelta, yDelta);
         this.getChildren().clear();
         this.drawLines();
     }
-
 
     /**
      * Method which zoom in and zoom out map boundaries.
@@ -190,36 +135,7 @@ public class MapPane extends Pane {
      * @param zoomSign if zooming in : 1 else -1
      */
     public void zoomMapView(int zoomSign) {
-        int newZoomLevel = this.zoomLevel + zoomSign;
-        if (newZoomLevel >= MIN_ZOOM_LEVEL && newZoomLevel <= MAX_ZOOM_LEVEL) {
-            this.zoomLevel = newZoomLevel;
-        } else {
-            return;
-        }
-
-        double minBoundX = CoordinatesConverter.convertLongitudeToX(this.minBound.getX(), this.zoomLevel);
-        double minBoundY = CoordinatesConverter.convertLatitudeToY(this.minBound.getY(), this.zoomLevel);
-        double maxBoundX = CoordinatesConverter.convertLongitudeToX(this.maxBound.getX(), this.zoomLevel);
-        double maxBoundY = CoordinatesConverter.convertLatitudeToY(this.maxBound.getY(), this.zoomLevel);
-
-        double viewWidthInPixels = maxBoundX - minBoundX;
-        double viewHeightInPixels = maxBoundY - minBoundY;
-
-        if (zoomSign < 0) {
-            minBoundX -= viewWidthInPixels / 2;
-            minBoundY -= viewHeightInPixels / 2;
-            maxBoundX += viewWidthInPixels / 2;
-            maxBoundY += viewHeightInPixels / 2;
-        } else {
-            minBoundX += viewWidthInPixels / 4;
-            minBoundY += viewHeightInPixels / 4;
-            maxBoundX -= viewWidthInPixels / 4;
-            maxBoundY -= viewHeightInPixels / 4;
-        }
-
-        this.setMinBound(minBoundX, minBoundY);
-        this.setMaxBound(maxBoundX, maxBoundY);
-
+        mapWindow.zoomMapWindow(zoomSign);
         this.getChildren().clear();
         this.drawLines();
     }
@@ -229,9 +145,8 @@ public class MapPane extends Pane {
      */
     public void drawNodes() {
         for (NodeOSM node : this.osm_graph.getNodes().values()) {
-            double nodeX = CoordinatesConverter.convertLongitudeToX(node.getLongitude(), this.zoomLevel);
-            double nodeY = CoordinatesConverter.convertLatitudeToY(node.getLatitude(), this.zoomLevel);
-            this.drawNode(nodeX, nodeY);
+            WindowXYCoordinate nodeWindowXY = node.getCoordinate().convertToWindowXY(mapWindow);
+            this.drawNode(nodeWindowXY.getX(), nodeWindowXY.getY(), Color.BLUE);
         }
     }
 
@@ -265,21 +180,16 @@ public class MapPane extends Pane {
         }
 
         WayOSM wayOSM = this.wayIdsMapper.get(laneId);
-        NodeOSM startingNode = wayOSM.getEdges().get(0).getStartNode();
-        NodeOSM endingNode = wayOSM.getEdges().get(wayOSM.getEdges().size() - 1).getEndNode();
+        NodeOSM startNode = wayOSM.getEdges().get(0).getStartNode();
+        NodeOSM endNode = wayOSM.getEdges().get(wayOSM.getEdges().size() - 1).getEndNode();
 
-        double startingNodeX = CoordinatesConverter.convertLongitudeToX(startingNode.getLongitude(), this.zoomLevel);
-        double startingNodeY = CoordinatesConverter.convertLatitudeToY(startingNode.getLatitude(), this.zoomLevel);
+        WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
+        WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
 
-        double endingNodeX = CoordinatesConverter.convertLongitudeToX(endingNode.getLongitude(), this.zoomLevel);
-        double endingNodeY = CoordinatesConverter.convertLatitudeToY(endingNode.getLatitude(), this.zoomLevel);
+        double carX = startNodeWindowXY.getX() + positionOnLane * (endNodeWindowXY.getX() - startNodeWindowXY.getX());
+        double carY = startNodeWindowXY.getY() + positionOnLane * (endNodeWindowXY.getY() - startNodeWindowXY.getY());
 
-        System.out.println(Math.sqrt(Math.pow(endingNodeX - startingNodeX, 2) + Math.pow(endingNodeY - startingNodeY, 2)) + " -> " + positionOnLane);
-
-        double carX = startingNodeX + positionOnLane * (endingNodeX - startingNodeX);
-        double carY = startingNodeY + positionOnLane * (endingNodeY - startingNodeY);
-
-        this.drawNode(carX, carY);
+        this.drawNode(carX, carY, Color.RED);
     }
 
     // TODO remove
@@ -294,22 +204,8 @@ public class MapPane extends Pane {
      * @param x node x coordinate
      * @param y node y coordinate
      */
-    public void drawNode(double x, double y) {
-        double x1 = CoordinatesConverter.scaleXToFitWindow(x, this.minBound, this.maxBound, MAP_WIDTH, this.zoomLevel);
-        double y1 = CoordinatesConverter.scaleYToFitWindow(y, this.minBound, this.maxBound, MAP_HEIGHT, this.zoomLevel);
-        this.gc.setFill(Color.RED);
-        this.gc.fillRect(x1, y1, 10, 10);
-    }
-
-    private void setMinBound(double minBoundX, double minBoundY) {
-        double newMinBoundLongitude = CoordinatesConverter.convertXToLongitude(minBoundX, this.zoomLevel);
-        double newMinBoundLatitude = CoordinatesConverter.convertYToLatitude(minBoundY, this.zoomLevel);
-        this.minBound = new Point2D(newMinBoundLongitude, newMinBoundLatitude);
-    }
-
-    private void setMaxBound(double maxBoundX, double maxBoundY) {
-        double newMaxBoundLongitude = CoordinatesConverter.convertXToLongitude(maxBoundX, this.zoomLevel);
-        double newMaxBoundLatitude = CoordinatesConverter.convertYToLatitude(maxBoundY, this.zoomLevel);
-        this.maxBound = new Point2D(newMaxBoundLongitude, newMaxBoundLatitude);
+    public void drawNode(double x, double y, Color color) {
+        this.gc.setFill(color);
+        this.gc.fillRect(x, y, 10, 10);
     }
 }

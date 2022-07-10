@@ -1,8 +1,8 @@
 package pl.edu.agh.wwwrsrm.graph;
 
-import javafx.geometry.Point2D;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
 import java.util.*;
 
@@ -27,45 +27,49 @@ public class GraphOSM {
      * @return road graph max Latitude coordinate
      */
     public Double getTopBound() {
-        return Collections.max(this.nodes.values(), Comparator.comparing(NodeOSM::getLatitude)).getLatitude();
+        NodeOSM topNode = Collections.max(this.nodes.values(), Comparator.comparing(nodeOSM -> nodeOSM.getCoordinate().getLatitude()));
+        return topNode.getCoordinate().getLatitude();
     }
 
     /**
      * @return road graph min Longitude coordinate
      */
     public Double getLeftBound() {
-        return Collections.min(this.nodes.values(), Comparator.comparing(NodeOSM::getLongitude)).getLongitude();
+        NodeOSM leftNode = Collections.min(this.nodes.values(), Comparator.comparing(nodeOSM -> nodeOSM.getCoordinate().getLongitude()));
+        return leftNode.getCoordinate().getLongitude();
     }
 
     /**
      * @return road graph min Latitude coordinate
      */
     public Double getBottomBound() {
-        return Collections.min(this.nodes.values(), Comparator.comparing(NodeOSM::getLatitude)).getLatitude();
+        NodeOSM bottomNode = Collections.min(this.nodes.values(), Comparator.comparing(nodeOSM -> nodeOSM.getCoordinate().getLatitude()));
+        return bottomNode.getCoordinate().getLatitude();
     }
 
     /**
      * @return road graph max Longitude coordinate
      */
     public Double getRightBound() {
-        return Collections.max(this.nodes.values(), Comparator.comparing(NodeOSM::getLongitude)).getLongitude();
+        NodeOSM rightNode = Collections.max(this.nodes.values(), Comparator.comparing(nodeOSM -> nodeOSM.getCoordinate().getLongitude()));
+        return rightNode.getCoordinate().getLongitude();
     }
 
     /**
-     * @return Point2D as [min Longitude, max Latitude]
+     * @return LonLatCoordinate (min Longitude, max Latitude)
      */
-    public Point2D getTopLeftBound() {
+    public LonLatCoordinate getTopLeftBound() {
         Double topBound = this.getTopBound();
         Double leftBound = this.getLeftBound();
-        return new Point2D(leftBound, topBound);
+        return new LonLatCoordinate(leftBound, topBound);
     }
 
     /**
-     * @return Point2D as [max Longitude, min Latitude]
+     * @return LonLatCoordinate (max Longitude, min Latitude)
      */
-    public Point2D getBottomRightBound() {
+    public LonLatCoordinate getBottomRightBound() {
         Double bottomBound = this.getBottomBound();
         Double rightBound = this.getRightBound();
-        return new Point2D(rightBound, bottomBound);
+        return new LonLatCoordinate(rightBound, bottomBound);
     }
 }
