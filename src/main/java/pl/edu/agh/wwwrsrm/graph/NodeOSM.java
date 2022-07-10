@@ -1,7 +1,7 @@
 package pl.edu.agh.wwwrsrm.graph;
 
 import lombok.Getter;
-import org.openstreetmap.osmosis.core.domain.v0_6.Node;
+import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
 /**
  * NodeOSM implements road graph node
@@ -9,13 +9,10 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 @Getter
 public class NodeOSM {
     private final long id;
-    private final double latitude;
-    private final double longitude;
+    private final LonLatCoordinate coordinate;
 
-
-    public NodeOSM(Node node) {
-        this.id = node.getId();
-        this.latitude = node.getLatitude();
-        this.longitude = node.getLongitude();
+    public NodeOSM(long id, LonLatCoordinate coordinate) {
+        this.id = id;
+        this.coordinate = coordinate;
     }
 }

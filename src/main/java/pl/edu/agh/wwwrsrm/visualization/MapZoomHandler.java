@@ -3,6 +3,7 @@ package pl.edu.agh.wwwrsrm.visualization;
 import javafx.event.EventHandler;
 import javafx.scene.input.ScrollEvent;
 import lombok.AllArgsConstructor;
+import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 
 /**
  * MapZoomHandler handles Scroll event to zoom in and zoom out the map view.
@@ -15,7 +16,7 @@ public class MapZoomHandler implements EventHandler<ScrollEvent> {
     public void handle(ScrollEvent scrollEvent) {
         if (scrollEvent.getEventType().equals(ScrollEvent.SCROLL)){
             double deltaY = scrollEvent.getDeltaY();
-            this.mapPane.zoomMapView((deltaY > 0) ? 1 : -1);
+            mapPane.zoomMapView((deltaY > 0) ? Zoom.IN : Zoom.OUT);
         }
     }
 }

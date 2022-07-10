@@ -106,7 +106,22 @@
             <artifactId>kafka-protobuf-serializer</artifactId>
             <version>7.1.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
     <build>
         <defaultGoal>clean generate-sources compile install</defaultGoal>
         <plugins>
@@ -120,9 +135,11 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <release>11</release>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>17</source>
+                    <target>17</target>
+                    <showWarnings>true</showWarnings>
+                    <compilerVersion>17</compilerVersion>
+                    <debug>true</debug>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>

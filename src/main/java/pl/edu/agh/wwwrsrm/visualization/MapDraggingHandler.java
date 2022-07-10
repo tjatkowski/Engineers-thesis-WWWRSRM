@@ -33,8 +33,8 @@ public class MapDraggingHandler implements EventHandler<MouseEvent> {
     }
 
     public void dragMap(){
-        double xDelta = this.currMouseX - this.lastMouseX;
-        double yDelta = this.currMouseY - this.lastMouseY;
+        double xDelta = this.lastMouseX - this.currMouseX;
+        double yDelta = this.lastMouseY - this.currMouseY;
         this.mapPane.dragMapViewByVector(xDelta, yDelta);
     }
 }

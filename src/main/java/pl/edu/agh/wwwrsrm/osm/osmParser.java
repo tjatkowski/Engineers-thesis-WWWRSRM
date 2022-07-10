@@ -10,6 +10,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
+import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -117,7 +118,8 @@ public class osmParser {
                 osmWay = new WayOSM(false, wayParameters);
             }
 
-            way.getWayNodes().stream().map(WayNode::getNodeId).map(allNodes::get).map(NodeOSM::new)
+            way.getWayNodes().stream().map(WayNode::getNodeId).map(allNodes::get)
+                    .map(node -> new NodeOSM(node.getId(), new LonLatCoordinate(node.getLongitude(), node.getLatitude())))
                     .reduce((node1, node2) -> {
                         osm_graph.addNode(node1);
                         osm_graph.addNode(node2);
