@@ -1,13 +1,14 @@
 package pl.edu.agh.wwwrsrm.utils.coordinates;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import pl.edu.agh.wwwrsrm.utils.Vec2D;
-import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class GlobalXYCoordinate extends AbstractCoordinateConverter {
 
@@ -24,10 +25,5 @@ public class GlobalXYCoordinate extends AbstractCoordinateConverter {
 
     public LonLatCoordinate convertToLonLatCoordinate(int zoomLevel) {
         return new LonLatCoordinate(convertGlobalXToLongitude(x, zoomLevel), convertGlobalYToLatitude(y, zoomLevel));
-    }
-
-    public WindowXYCoordinate convertToWindowXYCoordinate(MapWindow mapWindow) {
-        return new WindowXYCoordinate(convertGlobalXToWindowX(x, mapWindow),
-                convertGlobalYToWindowY(y, mapWindow));
     }
 }

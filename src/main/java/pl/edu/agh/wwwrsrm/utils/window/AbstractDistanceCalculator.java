@@ -3,7 +3,7 @@ package pl.edu.agh.wwwrsrm.utils.window;
 import pl.edu.agh.wwwrsrm.utils.Vec2D;
 import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
-public class AbstractDistanceCalculator {
+public abstract class AbstractDistanceCalculator {
 
     private static final double PI = Math.PI;
     private static final int R = 6378137;

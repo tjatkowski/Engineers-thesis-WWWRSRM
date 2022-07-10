@@ -3,6 +3,7 @@ package pl.edu.agh.wwwrsrm.utils.window;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.agh.wwwrsrm.utils.Vec2D;
+import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.coordinates.GlobalXYCoordinate;
 
 /**
@@ -25,28 +26,37 @@ public class GlobalMapWindow {
         updateGlobalWindowSize();
     }
 
-    public void dragMapWindowByVector(double xPercentageShift, double yPercentageShift) {
+    /**
+     * Method which moves map boundaries.
+     */
+    public void dragMapWindowByPercentage(double xPercentageShift, double yPercentageShift) {
         int xShift = (int) (xPercentageShift * globalWindowWidth);
         int yShift = (int) (yPercentageShift * globalWindowHeight);
 
-        this.globalTopLeftPoint = globalTopLeftPoint.subtract(new Vec2D(xShift, yShift));
-        this.globalBottomRightPoint = globalBottomRightPoint.subtract(new Vec2D(xShift, yShift));
+        this.globalTopLeftPoint = globalTopLeftPoint.add(new Vec2D(xShift, yShift));
+        this.globalBottomRightPoint = globalBottomRightPoint.add(new Vec2D(xShift, yShift));
         updateGlobalWindowSize();
     }
 
-    public void zoomMapWindow(int zoomSign) {
+    /**
+     * Method which zoom in and zoom out map boundaries.
+     */
+    public void zoomMapWindow(Zoom zoom) {
         int widthZoomFactor;
         int heightZoomFactor;
-        if (zoomSign < 0) {
-            widthZoomFactor = globalWindowWidth / 2;
-            heightZoomFactor = globalWindowHeight / 2;
-            this.globalTopLeftPoint = globalTopLeftPoint.subtract(new Vec2D(widthZoomFactor, heightZoomFactor));
-            this.globalBottomRightPoint = globalBottomRightPoint.add(new Vec2D(widthZoomFactor, heightZoomFactor));
-        } else {
-            widthZoomFactor = globalWindowWidth / 4;
-            heightZoomFactor = globalWindowHeight / 4;
-            this.globalTopLeftPoint = globalTopLeftPoint.add(new Vec2D(widthZoomFactor, heightZoomFactor));
-            this.globalBottomRightPoint = globalBottomRightPoint.subtract(new Vec2D(widthZoomFactor, heightZoomFactor));
+        switch (zoom) {
+            case IN -> {
+                widthZoomFactor = globalWindowWidth / 4;
+                heightZoomFactor = globalWindowHeight / 4;
+                this.globalTopLeftPoint = globalTopLeftPoint.add(new Vec2D(widthZoomFactor, heightZoomFactor));
+                this.globalBottomRightPoint = globalBottomRightPoint.subtract(new Vec2D(widthZoomFactor, heightZoomFactor));
+            }
+            case OUT -> {
+                widthZoomFactor = globalWindowWidth / 2;
+                heightZoomFactor = globalWindowHeight / 2;
+                this.globalTopLeftPoint = globalTopLeftPoint.subtract(new Vec2D(widthZoomFactor, heightZoomFactor));
+                this.globalBottomRightPoint = globalBottomRightPoint.add(new Vec2D(widthZoomFactor, heightZoomFactor));
+            }
         }
         updateGlobalWindowSize();
     }

@@ -26,6 +26,7 @@ module SimulationVisualization {
     exports pl.edu.agh.wwwrsrm.visualization;
     exports pl.edu.agh.wwwrsrm.utils.coordinates;
     exports pl.edu.agh.wwwrsrm.utils.window;
+    exports pl.edu.agh.wwwrsrm.utils.constants;
     exports pl.edu.agh.wwwrsrm.utils;
     exports pl.edu.agh.wwwrsrm.graph;
     exports pl.edu.agh.wwwrsrm.osm;

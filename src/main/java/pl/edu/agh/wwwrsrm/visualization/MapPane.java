@@ -12,6 +12,7 @@ import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.osm.WayParameters;
+import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -94,8 +94,7 @@ public class MapPane extends Pane {
                 points.addAll(way.getEdges().stream()
                         .map(EdgeOSM::getEndNode)
                         .map(NodeOSM::getCoordinate)
-                        .map(coordinate -> coordinate.convertToWindowXY(mapWindow))
-                        .collect(Collectors.toList()));
+                        .map(coordinate -> coordinate.convertToWindowXY(mapWindow)).toList());
 
                 this.drawPolygonInCanvas(points.stream().map(WindowXYCoordinate::getX).mapToDouble(Integer::doubleValue).toArray(),
                         points.stream().map(WindowXYCoordinate::getY).mapToDouble(Integer::doubleValue).toArray(), wayColor);
@@ -119,9 +118,6 @@ public class MapPane extends Pane {
 
     /**
      * Method which moves map boundaries.
-     *
-     * @param xDelta x delta in XY coordinates
-     * @param yDelta y delta in XY coordinates
      */
     public void dragMapViewByVector(double xDelta, double yDelta) {
         mapWindow.dragMapWindowByVector(xDelta, yDelta);
@@ -131,11 +127,9 @@ public class MapPane extends Pane {
 
     /**
      * Method which zoom in and zoom out map boundaries.
-     *
-     * @param zoomSign if zooming in : 1 else -1
      */
-    public void zoomMapView(int zoomSign) {
-        mapWindow.zoomMapWindow(zoomSign);
+    public void zoomMapView(Zoom zoom) {
+        mapWindow.zoomMapWindow(zoom);
         this.getChildren().clear();
         this.drawLines();
     }

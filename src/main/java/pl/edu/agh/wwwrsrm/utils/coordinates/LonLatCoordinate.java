@@ -1,5 +1,6 @@
 package pl.edu.agh.wwwrsrm.utils.coordinates;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -7,6 +8,7 @@ import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
 @Getter
 @ToString
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class LonLatCoordinate extends AbstractCoordinateConverter {
 
