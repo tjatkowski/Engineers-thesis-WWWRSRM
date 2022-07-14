@@ -1,9 +1,7 @@
-package coordinates;
+package pl.edu.agh.wwwrsrm.utils.coordinates;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import pl.edu.agh.wwwrsrm.utils.coordinates.GlobalXYCoordinate;
-import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
