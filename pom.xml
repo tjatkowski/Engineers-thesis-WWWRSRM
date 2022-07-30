@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.example</groupId>
     <artifactId>SimulationVisualization</artifactId>
@@ -16,25 +16,37 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+        <spring-boot.version>2.7.1</spring-boot.version>
+        <spring-context.version>5.3.21</spring-context.version>
+        <spring-kafka.version>2.8.7</spring-kafka.version>
+        <projectlombok.version>1.8.24</projectlombok.version>
+        <kafka-version>3.2.0</kafka-version>
+        <javafx.version>19-ea+8</javafx.version>
+        <osmosis.version>0.48.3</osmosis.version>
+        <protobuf.version>3.21.2</protobuf.version>
+        <kafka-protobuf.version>7.2.0</kafka-protobuf.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <mockito.version>1.10.19</mockito.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.7.0</version>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring-boot.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.3.20</version>
+            <version>${spring-context.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
-            <version>2.8.6</version>
+            <version>${spring-kafka.version}</version>
         </dependency>
 
         <dependency>
@@ -47,96 +59,89 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
-            <version>3.1.0</version>
+            <version>${kafka-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
-            <version>3.1.0</version>
+            <version>${kafka-version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>17.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.openstreetmap.osmosis</groupId>
             <artifactId>osmosis-pbf</artifactId>
-            <version>0.48.3</version>
+            <version>${osmosis.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.openstreetmap.osmosis</groupId>
             <artifactId>osmosis-core</artifactId>
-            <version>0.48.3</version>
+            <version>${osmosis.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.7.0</version>
+            <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
-            <version>2.8.6</version>
+            <version>${spring-kafka.version}</version>
             <scope>test</scope>
         </dependency>
 
-         <dependency>
+        <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.20.1</version>
+            <version>${protobuf.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.confluent/kafka-protobuf-serializer -->
         <dependency>
             <groupId>io.confluent</groupId>
             <artifactId>kafka-protobuf-serializer</artifactId>
-            <version>7.1.1</version>
+            <version>${kafka-protobuf.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.8.2</version>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <defaultGoal>clean generate-sources compile install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.0</version>
+                <version>${spring-boot.version}</version>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                     <showWarnings>true</showWarnings>
                     <compilerVersion>17</compilerVersion>
                     <debug>true</debug>
@@ -149,19 +154,13 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
             <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.6</version>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>pl.edu.agh.wwwrsrm.SimulationVisualization</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
             </plugin>
+
             <plugin>
                 <groupId>com.github.os72</groupId>
                 <artifactId>protoc-jar-maven-plugin</artifactId>

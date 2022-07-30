@@ -1,10 +1,9 @@
-package window;
+package pl.edu.agh.wwwrsrm.utils.window;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.coordinates.GlobalXYCoordinate;
-import pl.edu.agh.wwwrsrm.utils.window.GlobalMapWindow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,7 +15,7 @@ public class GlobalMapWindowTest {
     public void init() {
         GlobalXYCoordinate topLeftPoint = new GlobalXYCoordinate(500, 500);
         GlobalXYCoordinate bottomRightPoint = new GlobalXYCoordinate(1000, 1000);
-        globalMapWindow = new GlobalMapWindow(topLeftPoint, bottomRightPoint);
+        this.globalMapWindow = new GlobalMapWindow(topLeftPoint, bottomRightPoint);
     }
 
     @Test

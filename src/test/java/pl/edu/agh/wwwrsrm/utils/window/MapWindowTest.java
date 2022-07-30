@@ -1,10 +1,9 @@
-package window;
+package pl.edu.agh.wwwrsrm.utils.window;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
-import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
