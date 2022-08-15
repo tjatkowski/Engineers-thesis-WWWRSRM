@@ -13,6 +13,6 @@ spring:
         spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.protobuf.KafkaProtobufDeserializer
 
     properties:
-      schema.registry.url: http://localhost:8081
+      schema.registry.url: http://localhost:8085
       auto.register.schemas: true
       specific.protobuf.value.type: proto.model.CarMessage
