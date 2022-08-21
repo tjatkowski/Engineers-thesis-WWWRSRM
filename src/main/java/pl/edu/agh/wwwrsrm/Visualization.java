@@ -26,7 +26,7 @@ public class Visualization extends Application {
     @Override
     public void init() {
         // parse OSM map
-        GraphOSM osm_graph = osmParser.CreateGraph("src\\main\\resources\\osm\\cracow.pbf");
+        GraphOSM osm_graph = osmParser.CreateGraph("src/main/resources/osm/cracow.pbf");
         // App pane
         this.appPane = new AppPane();
         // Map pane
