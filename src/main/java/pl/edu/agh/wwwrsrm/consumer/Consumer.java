@@ -8,34 +8,39 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import pl.edu.agh.wwwrsrm.model.Car;
 import proto.model.CarMessage;
+import proto.model.CarsMessage;
 
 import java.util.LinkedList;
+import java.util.Date;
 
 import static pl.edu.agh.wwwrsrm.consumer.config.TopicConfiguration.*;
 
 @Slf4j
-//@Service
+@Service
 public class Consumer {
     @Getter
     private final LinkedList<Car> cars = new LinkedList<>();
 
     @KafkaListener(topics = CARS_TOPIC, groupId = CARS_TOPIC, batch = "true")
-    void carsListener(ConsumerRecords<String, CarMessage> records) {
+    void carsListener(ConsumerRecords<String, CarsMessage> records) {
         log.info("Start batch processing");
-        for (ConsumerRecord<String, CarMessage> cr : records) {
-            log.info("Received car [key:{}, partition:{}, offset:{}]:{}",
-                    cr.key(), cr.partition(), cr.offset(), cr.value().getCarId());
-            CarMessage carMessage = cr.value();
-            Car car = Car.builder()
-                    .carId(carMessage.getCarId())
-                    .length(carMessage.getLength())
-                    .acceleration(carMessage.getAcceleration())
-                    .speed(carMessage.getSpeed())
-                    .maxSpeed(carMessage.getMaxSpeed())
-                    .laneId(carMessage.getLaneId())
-                    .positionOnLane(carMessage.getPositionOnLane())
-                    .build();
-            this.cars.add(car);
+        for (ConsumerRecord<String, CarsMessage> cr : records) {
+            log.info("Received cars [data:{}, partition:{}, offset:{}]",
+                    cr.value().getClass().getSimpleName(), cr.partition(), cr.offset());
+            var d = new Date(cr.timestamp());
+            log.info(String.valueOf(d));
+            cr.value().getCarsMessagesList().forEach(carMessage -> {
+                Car car = Car.builder()
+                        .carId(carMessage.getCarId())
+                        .length(carMessage.getLength())
+                        .acceleration(carMessage.getAcceleration())
+                        .speed(carMessage.getSpeed())
+                        .maxSpeed(carMessage.getMaxSpeed())
+                        .laneId(carMessage.getLaneId())
+                        .positionOnLane(carMessage.getPositionOnLane())
+                        .build();
+                this.cars.add(car);
+            });
         }
         log.info("End batch processing");
         System.out.println("Current cars size : " + this.cars.size());

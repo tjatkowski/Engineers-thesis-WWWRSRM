@@ -4,5 +4,6 @@
 *.iws
 *.iml
 *.ipr
+.DS_Store
 
 src/main/java/proto

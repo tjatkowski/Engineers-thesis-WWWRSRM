@@ -156,6 +156,10 @@ public class MapPane extends Pane {
         this.cars.put(car.getCarId(), car);
     }
 
+    public void clearCars() {
+        this.cars.clear();
+    }
+
     /**
      * drawCar method draw car on the MapPane
      */

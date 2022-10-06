@@ -15,4 +15,4 @@ spring:
     properties:
       schema.registry.url: http://localhost:8085
       auto.register.schemas: true
-      specific.protobuf.value.type: proto.model.CarMessage
+      specific.protobuf.value.type: proto.model.CarsMessage

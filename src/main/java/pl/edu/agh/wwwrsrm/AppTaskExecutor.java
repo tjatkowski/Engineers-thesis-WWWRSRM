@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 import static java.lang.Thread.sleep;
 
-//@Component
+@Component
 public class AppTaskExecutor {
 
     private MapPane mapPane;
@@ -49,9 +49,12 @@ public class AppTaskExecutor {
                     System.out.println("Start consuming cars");
                     LinkedList<Car> cars = consumer.getCars();
                     System.out.println("Consumed cars size : " + cars.size());
+                    if(!cars.isEmpty()) {
+                        mapPane.clearCars();
+                    }
                     while (!cars.isEmpty()) {
                         Car car = cars.poll();
-                        System.out.println("Consumed carId : " + car.getCarId());
+//                        System.out.println("Consumed carId : " + car.getCarId());
                         mapPane.updateCar(car);
                     }
 
