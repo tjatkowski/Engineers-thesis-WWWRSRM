@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "visualization_delay",
+      "type": "java.lang.String",
+      "description": "Description for visualization_delay."
+  }
+] }
