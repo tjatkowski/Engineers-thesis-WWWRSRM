@@ -6,17 +6,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import pl.edu.agh.wwwrsrm.events.ApplicationRunEvent;
-import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.osm.osmParser;
+import pl.edu.agh.wwwrsrm.events.ApplicationStartedEvent;
 import pl.edu.agh.wwwrsrm.visualization.AppPane;
 import pl.edu.agh.wwwrsrm.visualization.ConfigPane;
-import pl.edu.agh.wwwrsrm.visualization.MapPane;
+import pl.edu.agh.wwwrsrm.visualization.drawing.MapDrawer;
 
 
 public class Visualization extends Application {
     private AppPane appPane;
-    private MapPane mapPane;
     private ConfigurableApplicationContext context;
 
     public static void main(String[] args) {
@@ -25,22 +22,20 @@ public class Visualization extends Application {
 
     @Override
     public void init() {
-        // parse OSM map
-        GraphOSM osm_graph = osmParser.CreateGraph("src/main/resources/osm/cracow.pbf");
+        this.context = new SpringApplicationBuilder(SimulationVisualization.class).run();
+
         // App pane
         this.appPane = new AppPane();
         // Map pane
-        this.mapPane = new MapPane(osm_graph);
+        MapDrawer mapDrawer = context.getBean(MapDrawer.class);
         // Config pane
         ConfigPane configPane = new ConfigPane();
 
         // prepare
-        this.mapPane.drawLines();
+        mapDrawer.drawLines();
         configPane.loadConfig();
 
-        appPane.getChildren().addAll(this.mapPane, configPane);
-
-        this.context = new SpringApplicationBuilder(SimulationVisualization.class).run();
+        appPane.getChildren().addAll(mapDrawer.getMapPane(), configPane);
     }
 
 
@@ -54,7 +49,8 @@ public class Visualization extends Application {
         stage.setScene(scene);
         stage.show();
 
-        this.context.publishEvent(new ApplicationRunEvent(this.mapPane));
+        // uncomment this to start consuming cars immediately after application start
+//        this.context.publishEvent(new ApplicationStartedEvent(this));
     }
 
     @Override
