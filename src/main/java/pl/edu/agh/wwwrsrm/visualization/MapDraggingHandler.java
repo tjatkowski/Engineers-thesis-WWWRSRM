@@ -2,20 +2,21 @@ package pl.edu.agh.wwwrsrm.visualization;
 
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import pl.edu.agh.wwwrsrm.window.map.Map;
 
 /**
  * MapDraggingHandler handles mouse dragging on the map.
  * It computes delta X and delta Y to shift map view.
  */
 public class MapDraggingHandler implements EventHandler<MouseEvent> {
-    private final MapPane mapPane;
+    private final Map map;
     private double lastMouseX;
     private double lastMouseY;
     private double currMouseX;
     private double currMouseY;
 
-    public MapDraggingHandler(MapPane mapPane){
-        this.mapPane = mapPane;
+    public MapDraggingHandler(Map mapPane){
+        this.map = mapPane;
     }
 
     @Override
@@ -35,6 +36,6 @@ public class MapDraggingHandler implements EventHandler<MouseEvent> {
     public void dragMap(){
         double xDelta = this.lastMouseX - this.currMouseX;
         double yDelta = this.lastMouseY - this.currMouseY;
-        this.mapPane.dragMapViewByVector(xDelta, yDelta);
+        this.map.dragMapViewByVector(xDelta, yDelta);
     }
 }

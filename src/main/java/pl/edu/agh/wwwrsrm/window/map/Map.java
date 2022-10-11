@@ -1,30 +1,51 @@
 package pl.edu.agh.wwwrsrm.window.map;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.animation.AnimationTimer;
 
+import pl.edu.agh.wwwrsrm.graph.GraphOSM;
+import pl.edu.agh.wwwrsrm.graph.WayOSM;
+import pl.edu.agh.wwwrsrm.model.Car;
+import pl.edu.agh.wwwrsrm.osm.osmParser;
 import pl.edu.agh.wwwrsrm.render.Layer;
 import pl.edu.agh.wwwrsrm.render.layers.*;
+import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
+import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
+import pl.edu.agh.wwwrsrm.visualization.MapDraggingHandler;
+import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
 
 public class Map extends Canvas {
     private Vector<Layer> layers = new Vector<Layer>();
 
     private AnimationTimer timer;
 
+    private MapWindow mapWindow;
+
+    private GraphOSM osm_graph;
+
+    private final java.util.Map<String, Car> cars = new HashMap<>();
+
     public Map(double width, double height) {
         super(width, height);
+        this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
+        this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
+        osm_graph = osmParser.CreateGraph("src/main/resources/osm/cracow.pbf");
+        this.mapWindow = new MapWindow(osm_graph.getTopLeftBound(), osm_graph.getBottomRightBound(), (int)width, (int)height);
         setTimer();
         addLayers();
-    
     }
     
     private void addLayers() {
+        layers.add(new RoadsLayer(getWidth(), getHeight(), osm_graph, mapWindow));
+        layers.add(new CarsLayer(getWidth(), getHeight(), osm_graph, mapWindow, cars));
         layers.add(new DebugLayer(getWidth(), getHeight()));
-        
     }
 
     private void setTimer() {
@@ -44,8 +65,23 @@ public class Map extends Canvas {
         GraphicsContext gc = this.getGraphicsContext2D();
         gc.setFill(Color.PINK);
         gc.fillRect(0, 0, getWidth(), getHeight());
-        for (Integer i = 0; i < this.layers.size(); i++) {
-            this.layers.get(i).draw(gc, delta);
+        for (Layer layer : this.layers) {
+            layer.draw(gc, delta);
         }
+    }
+
+    /**
+     * Method which moves map boundaries.
+     */
+    public void dragMapViewByVector(double xDelta, double yDelta) {
+        mapWindow.dragMapWindowByVector(xDelta, yDelta);
+    }
+
+
+    /**
+     * Method which zoom in and zoom out map boundaries.
+     */
+    public void zoomMapView(Zoom zoom) {
+        mapWindow.zoomMapWindow(zoom);
     }
 }

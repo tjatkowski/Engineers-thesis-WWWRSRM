@@ -10,6 +10,8 @@ import pl.edu.agh.wwwrsrm.events.ApplicationStartedEvent;
 import pl.edu.agh.wwwrsrm.visualization.AppPane;
 import pl.edu.agh.wwwrsrm.visualization.ConfigPane;
 import pl.edu.agh.wwwrsrm.visualization.drawing.MapDrawer;
+import pl.edu.agh.wwwrsrm.visualization.MapPane;
+import pl.edu.agh.wwwrsrm.window.Window;
 
 
 public class Visualization extends Application {
@@ -45,8 +47,10 @@ public class Visualization extends Application {
         stage.setTitle("WWWRSRM - Traffic Visualization");
         stage.setMaximized(true);
 
-        Scene scene = new Scene(this.appPane);
-        stage.setScene(scene);
+//        Scene scene = new Scene(this.appPane);
+//        stage.setScene(scene);
+        Window window = new Window();
+        stage.setScene(window.getScene());
         stage.show();
 
         // uncomment this to start consuming cars immediately after application start
