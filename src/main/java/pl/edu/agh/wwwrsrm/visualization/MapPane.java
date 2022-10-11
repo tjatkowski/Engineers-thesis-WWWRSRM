@@ -43,8 +43,8 @@ public class MapPane extends Pane {
     public MapPane(GraphOSM osm_graph) {
         this.setPrefSize(MAP_WIDTH, MAP_HEIGHT);
         this.setStyle("-fx-background-color: #808080;");
-        this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
-        this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
+//        this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
+//        this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
         this.osm_graph = osm_graph;
         this.mapWindow = new MapWindow(osm_graph.getTopLeftBound(), osm_graph.getBottomRightBound(), MAP_WIDTH, MAP_HEIGHT);
         this.map = new Canvas(MAP_WIDTH, MAP_HEIGHT);
