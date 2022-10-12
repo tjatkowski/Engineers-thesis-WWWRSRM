@@ -73,9 +73,6 @@ public class RoadsLayer extends Layer {
                         points.stream().map(WindowXYCoordinate::getY).mapToDouble(Integer::doubleValue).toArray(), wayColor);
             }
         }
-//        this.drawCars();
-//        this.getChildren().add(this.map);
-
     }
 
 

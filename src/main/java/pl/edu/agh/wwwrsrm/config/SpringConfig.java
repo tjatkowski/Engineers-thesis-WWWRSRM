@@ -7,6 +7,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.osm.osmParser;
 import pl.edu.agh.wwwrsrm.visualization.MapPane;
+import pl.edu.agh.wwwrsrm.window.Style;
+import pl.edu.agh.wwwrsrm.window.map.Map;
+import pl.edu.agh.wwwrsrm.window.menu.Menu;
 
 @Configuration
 public class SpringConfig {
@@ -21,5 +24,4 @@ public class SpringConfig {
     public TaskScheduler taskScheduler() {
         return new ThreadPoolTaskScheduler();
     }
-
 }

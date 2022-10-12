@@ -2,7 +2,6 @@ package pl.edu.agh.wwwrsrm.render.layers;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-@Component
 public class CarsLayer extends Layer {
 
     private final GraphOSM osm_graph;
