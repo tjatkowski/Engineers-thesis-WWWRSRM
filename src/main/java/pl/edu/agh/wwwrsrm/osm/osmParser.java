@@ -23,13 +23,13 @@ import java.util.Map;
 public class osmParser {
     public static final Map<String, WayParameters> roadZooms = Map.ofEntries(
             // roads
-            Map.entry("motorway", new WayParameters(5, 3, Color.SANDYBROWN, "highway")),
-            Map.entry("trunk", new WayParameters(9, 3, Color.SANDYBROWN, "highway")),
-            Map.entry("primary", new WayParameters(10, 3, Color.SANDYBROWN, "highway")),
-            Map.entry("secondary", new WayParameters(11, 3, Color.SANDYBROWN, "highway")),
-            Map.entry("tertiary", new WayParameters(12, 3, Color.SANDYBROWN, "highway")),
-            Map.entry("unclassified", new WayParameters(14, 3, Color.SANDYBROWN, "highway")),
-            Map.entry("residential", new WayParameters(15, 3, Color.SANDYBROWN, "highway")),
+            Map.entry("motorway", new WayParameters(5, 5, Color.SANDYBROWN, "highway")),
+            Map.entry("trunk", new WayParameters(9, 5, Color.SANDYBROWN, "highway")),
+            Map.entry("primary", new WayParameters(10, 5, Color.SANDYBROWN, "highway")),
+            Map.entry("secondary", new WayParameters(11, 5, Color.SANDYBROWN, "highway")),
+            Map.entry("tertiary", new WayParameters(12, 5, Color.SANDYBROWN, "highway")),
+            Map.entry("unclassified", new WayParameters(14, 5, Color.SANDYBROWN, "highway")),
+            Map.entry("residential", new WayParameters(15, 5, Color.SANDYBROWN, "highway")),
             // link roads
             Map.entry("motorway_link", new WayParameters(11, 2, Color.SALMON, "highway")),
             Map.entry("trunk_link", new WayParameters(12, 2, Color.SALMON, "highway")),
@@ -47,7 +47,7 @@ public class osmParser {
             Map.entry("road", new WayParameters(16, 1, Color.PAPAYAWHIP, "highway")),
             Map.entry("busway", new WayParameters(13, 1, Color.PAPAYAWHIP, "highway")),
             // waterway
-            Map.entry("river", new WayParameters(10, 4, Color.BLUE, "waterway")),
+            Map.entry("river", new WayParameters(10, 15, Color.BLUE, "waterway")),
             Map.entry("stream", new WayParameters(14, 1, Color.LIGHTBLUE, "waterway")),
             // accomodation
             Map.entry("house", new WayParameters(15, 3, Color.DARKGREY, "building")),
