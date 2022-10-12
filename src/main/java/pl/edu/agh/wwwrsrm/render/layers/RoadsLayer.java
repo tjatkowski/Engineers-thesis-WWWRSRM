@@ -28,10 +28,12 @@ public class RoadsLayer extends Layer {
 
     @Override
     public void draw(GraphicsContext gc, double delta) {
+        System.out.println((double)5 * (double)(Math.pow(((double)mapWindow.getZoomLevel()-12)/2.0, 2)));
         for (WayOSM way : osm_graph.getWays()) {
             WayParameters wayParameters = way.getEdgeParameter();
             int wayMinZoomLevel = wayParameters.getZoomLevel();
-            int wayWidth = wayParameters.getWayWidth();
+
+            double wayWidth = (double)wayParameters.getWayWidth() * (double)(Math.pow(((double)mapWindow.getZoomLevel()-12)/2.0, 2));
             Color wayColor = wayParameters.getColor();
 
             if (wayMinZoomLevel > mapWindow.getZoomLevel()) {
@@ -76,9 +78,10 @@ public class RoadsLayer extends Layer {
     }
 
 
-    public void drawLineInCanvas(GraphicsContext gc, WindowXYCoordinate startPoint, WindowXYCoordinate endPoint, int width, Color color) {
+    public void drawLineInCanvas(GraphicsContext gc, WindowXYCoordinate startPoint, WindowXYCoordinate endPoint, double width, Color color) {
         gc.setStroke(color);
         gc.setLineWidth(width);
+        gc.setLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
         gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
     }
 
