@@ -10,6 +10,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.animation.AnimationTimer;
 
+import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
@@ -20,7 +21,11 @@ import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 import pl.edu.agh.wwwrsrm.visualization.MapDraggingHandler;
 import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
+import pl.edu.agh.wwwrsrm.window.Style;
 
+import javax.annotation.PostConstruct;
+
+@Component
 public class Map extends Canvas {
     private Vector<Layer> layers = new Vector<Layer>();
 
@@ -32,12 +37,12 @@ public class Map extends Canvas {
 
     private final java.util.Map<String, Car> cars = new HashMap<>();
 
-    public Map(double width, double height) {
-        super(width, height);
+    public Map() {
+        super(Style.windowWidth - Style.menuWidth, Style.windowHeight);
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
         osm_graph = osmParser.CreateGraph("src/main/resources/osm/cracow.pbf");
-        this.mapWindow = new MapWindow(osm_graph.getTopLeftBound(), osm_graph.getBottomRightBound(), (int)width, (int)height);
+        this.mapWindow = new MapWindow(osm_graph.getTopLeftBound(), osm_graph.getBottomRightBound(), (int)getWidth(), (int)getHeight());
         setTimer();
         addLayers();
     }
@@ -61,9 +66,17 @@ public class Map extends Canvas {
         timer.start();
     }
 
+    public void clearCars() {
+        cars.clear();
+    }
+
+    public void updateCar(Car car) {
+        cars.put(car.getCarId(), car);
+    }
+
     public void draw(double delta) {
         GraphicsContext gc = this.getGraphicsContext2D();
-        gc.setFill(Color.PINK);
+        gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, getWidth(), getHeight());
         for (Layer layer : this.layers) {
             layer.draw(gc, delta);
