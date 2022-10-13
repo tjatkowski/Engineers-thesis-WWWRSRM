@@ -47,7 +47,7 @@ public class osmParser {
 //            Map.entry("road", new WayParameters(16, 10, Color.PAPAYAWHIP, "highway")),
 //            Map.entry("busway", new WayParameters(13, 10, Color.PAPAYAWHIP, "highway")),
 //            // waterway
-            Map.entry("river", new WayParameters(10, 100, Color.BLUE, "waterway")),
+            Map.entry("river", new WayParameters(10, 60, Color.BLUE, "waterway")),
 //            Map.entry("stream", new WayParameters(14, 15, Color.RED, "waterway"))
 //            // accomodation
             Map.entry("house", new WayParameters(15, 5, Color.DARKGREY, "building")),
