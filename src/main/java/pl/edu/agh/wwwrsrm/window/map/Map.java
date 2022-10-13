@@ -76,7 +76,7 @@ public class Map extends Canvas {
 
     public void draw(double delta) {
         GraphicsContext gc = this.getGraphicsContext2D();
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.LIGHTGRAY);
         gc.fillRect(0, 0, getWidth(), getHeight());
         for (Layer layer : this.layers) {
             layer.draw(gc, delta);

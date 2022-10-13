@@ -23,50 +23,50 @@ import java.util.Map;
 public class osmParser {
     public static final Map<String, WayParameters> roadZooms = Map.ofEntries(
             // roads
-            Map.entry("motorway", new WayParameters(5, 5, Color.SANDYBROWN, "highway")),
-            Map.entry("trunk", new WayParameters(9, 5, Color.SANDYBROWN, "highway")),
-            Map.entry("primary", new WayParameters(10, 5, Color.SANDYBROWN, "highway")),
-            Map.entry("secondary", new WayParameters(11, 5, Color.SANDYBROWN, "highway")),
-            Map.entry("tertiary", new WayParameters(12, 5, Color.SANDYBROWN, "highway")),
-            Map.entry("unclassified", new WayParameters(14, 5, Color.SANDYBROWN, "highway")),
-            Map.entry("residential", new WayParameters(15, 5, Color.SANDYBROWN, "highway")),
+            Map.entry("motorway", new WayParameters(5, 30, Color.WHITE, "highway")),
+            Map.entry("trunk", new WayParameters(9, 8, Color.WHITE, "highway")),
+            Map.entry("primary", new WayParameters(10, 20, Color.WHITE, "highway")),
+            Map.entry("secondary", new WayParameters(11, 17, Color.WHITE, "highway")),
+            Map.entry("tertiary", new WayParameters(12, 13, Color.WHITE, "highway")),
+            Map.entry("unclassified", new WayParameters(14, 8, Color.WHITE, "highway")),
+            Map.entry("residential", new WayParameters(15, 8, Color.WHITE, "highway")),
             // link roads
-            Map.entry("motorway_link", new WayParameters(11, 2, Color.SALMON, "highway")),
-            Map.entry("trunk_link", new WayParameters(12, 2, Color.SALMON, "highway")),
-            Map.entry("primary_link", new WayParameters(13, 2, Color.SALMON, "highway")),
-            Map.entry("secondary_link", new WayParameters(14, 2, Color.SALMON, "highway")),
-            Map.entry("tertiary_link", new WayParameters(15, 2, Color.SALMON, "highway")),
+            Map.entry("motorway_link", new WayParameters(11, 30, Color.WHITE, "highway")),
+            Map.entry("trunk_link", new WayParameters(12, 8, Color.WHITE, "highway")),
+            Map.entry("primary_link", new WayParameters(13, 20, Color.WHITE, "highway")),
+            Map.entry("secondary_link", new WayParameters(14, 17, Color.WHITE, "highway")),
+            Map.entry("tertiary_link", new WayParameters(15, 13, Color.WHITE, "highway")),
             // special roads
-            Map.entry("living_street", new WayParameters(17, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("service", new WayParameters(16, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("pedestrian", new WayParameters(16, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("track", new WayParameters(15, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("bus_guideway", new WayParameters(16, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("escape", new WayParameters(16, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("raceway", new WayParameters(16, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("road", new WayParameters(16, 1, Color.PAPAYAWHIP, "highway")),
-            Map.entry("busway", new WayParameters(13, 1, Color.PAPAYAWHIP, "highway")),
-            // waterway
-            Map.entry("river", new WayParameters(10, 15, Color.BLUE, "waterway")),
-            Map.entry("stream", new WayParameters(14, 1, Color.LIGHTBLUE, "waterway")),
-            // accomodation
-            Map.entry("house", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("apartments", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("barracks", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("bungalow", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("cabin", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("detached", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("dormitory", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("farm", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("hotel", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            // commercial
-//            Map.entry("commercial", new WayParameters(15, 3, Color.BURLYWOOD, "building")),
-            Map.entry("industrial", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("kiosk", new WayParameters(15, 3, Color.DARKGREY, "building")),
-            Map.entry("office", new WayParameters(14, 3, Color.DARKGREY, "building")),
-            Map.entry("retail", new WayParameters(14, 3, Color.DARKGREY, "building")),
-            Map.entry("supermarket", new WayParameters(13, 3, Color.DARKGREY, "building")),
-            Map.entry("warehouse", new WayParameters(13, 3, Color.DARKGREY, "building"))
+//            Map.entry("living_street", new WayParameters(17, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("service", new WayParameters(16, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("pedestrian", new WayParameters(16, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("track", new WayParameters(15, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("bus_guideway", new WayParameters(16, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("escape", new WayParameters(16, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("raceway", new WayParameters(16, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("road", new WayParameters(16, 10, Color.PAPAYAWHIP, "highway")),
+//            Map.entry("busway", new WayParameters(13, 10, Color.PAPAYAWHIP, "highway")),
+//            // waterway
+            Map.entry("river", new WayParameters(10, 100, Color.BLUE, "waterway")),
+//            Map.entry("stream", new WayParameters(14, 15, Color.RED, "waterway"))
+//            // accomodation
+            Map.entry("house", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("apartments", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("barracks", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("bungalow", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("cabin", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("detached", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("dormitory", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("farm", new WayParameters(15, 5, Color.DARKGREY, "building")),
+            Map.entry("hotel", new WayParameters(15, 5, Color.DARKGREY, "building"))
+//            // commercial
+////            Map.entry("commercial", new WayParameters(15, 3, Color.BURLYWOOD, "building")),
+//            Map.entry("industrial", new WayParameters(15, 3, Color.DARKGREY, "building")),
+//            Map.entry("kiosk", new WayParameters(15, 3, Color.DARKGREY, "building")),
+//            Map.entry("office", new WayParameters(14, 3, Color.DARKGREY, "building")),
+//            Map.entry("retail", new WayParameters(14, 3, Color.DARKGREY, "building")),
+//            Map.entry("supermarket", new WayParameters(13, 3, Color.DARKGREY, "building")),
+//            Map.entry("warehouse", new WayParameters(13, 3, Color.DARKGREY, "building"))
     );
 
     /**
