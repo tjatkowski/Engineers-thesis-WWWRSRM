@@ -2,22 +2,16 @@ package pl.edu.agh.wwwrsrm.render.layers;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
-import pl.edu.agh.wwwrsrm.osm.WayParameters;
-import pl.edu.agh.wwwrsrm.osm.osmParser;
 import pl.edu.agh.wwwrsrm.render.Layer;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class CarsLayer extends Layer {
 
