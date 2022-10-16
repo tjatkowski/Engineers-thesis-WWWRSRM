@@ -1,6 +1,5 @@
 package pl.edu.agh.wwwrsrm.render.layers;
 
-import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import pl.edu.agh.wwwrsrm.render.Layer;

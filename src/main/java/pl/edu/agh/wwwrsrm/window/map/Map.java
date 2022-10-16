@@ -1,29 +1,28 @@
 package pl.edu.agh.wwwrsrm.window.map;
 
-import java.util.HashMap;
-import java.util.Vector;
-
+import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-import javafx.animation.AnimationTimer;
-
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.osm.osmParser;
 import pl.edu.agh.wwwrsrm.render.Layer;
-import pl.edu.agh.wwwrsrm.render.layers.*;
+import pl.edu.agh.wwwrsrm.render.layers.CarsLayer;
+import pl.edu.agh.wwwrsrm.render.layers.DebugLayer;
+import pl.edu.agh.wwwrsrm.render.layers.DecorationsLayer;
+import pl.edu.agh.wwwrsrm.render.layers.RoadsLayer;
 import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 import pl.edu.agh.wwwrsrm.visualization.MapDraggingHandler;
 import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
 import pl.edu.agh.wwwrsrm.window.Style;
 
-import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Vector;
 
 @Component
 public class Map extends Canvas {
@@ -48,6 +47,7 @@ public class Map extends Canvas {
     }
     
     private void addLayers() {
+        layers.add(new DecorationsLayer(getWidth(), getHeight(), osm_graph, mapWindow));
         layers.add(new RoadsLayer(getWidth(), getHeight(), osm_graph, mapWindow));
         layers.add(new CarsLayer(getWidth(), getHeight(), osm_graph, mapWindow, cars));
         layers.add(new DebugLayer(getWidth(), getHeight()));
