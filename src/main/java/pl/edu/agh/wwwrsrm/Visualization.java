@@ -29,13 +29,13 @@ public class Visualization extends Application {
         // Map pane
         MapDrawer mapDrawer = context.getBean(MapDrawer.class);
         // Config pane
-        ConfigPane configPane = new ConfigPane();
+        //ConfigPane configPane = new ConfigPane();
 
         // prepare
         mapDrawer.drawLines();
-        configPane.loadConfig();
+        //configPane.loadConfig();
 
-        appPane.getChildren().addAll(mapDrawer.getMapPane(), configPane);
+        appPane.getChildren().addAll(mapDrawer.getMapPane());
     }
 
 
