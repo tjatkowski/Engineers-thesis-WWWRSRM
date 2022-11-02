@@ -37,7 +37,8 @@ public class CarsConsumer {
                         .acceleration(carMessage.getAcceleration())
                         .speed(carMessage.getSpeed())
                         .maxSpeed(carMessage.getMaxSpeed())
-                        .laneId(carMessage.getLaneId())
+                        .node1Id(carMessage.getNode1Id())
+                        .node2Id(carMessage.getNode2Id())
                         .positionOnLane(carMessage.getPositionOnLane())
                         .build();
                 this.cars.add(car);

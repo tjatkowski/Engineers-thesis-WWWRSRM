@@ -6,6 +6,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;
@@ -36,7 +38,6 @@ public class MapPane extends Pane {
 
     private Pane configPane;
 
-    private final Map<String, WayOSM> wayIdsMapper = new HashMap<>();
     private final Map<String, Car> cars = new HashMap<>();
 
     public MapPane(GraphOSM osm_graph) {
@@ -165,21 +166,18 @@ public class MapPane extends Pane {
      */
     // TODO change
     public void drawCar(Car car) {
-        String laneId = car.getLaneId();
-        double positionOnLane = car.getPositionOnLane();
-
-        if (!this.wayIdsMapper.containsKey(laneId)) {
-            WayOSM randomWayOSM;
-            do {
-                int randomWayIdx = getRandomIndex(0, this.osm_graph.getWays().size());
-                randomWayOSM = this.osm_graph.getWays().get(randomWayIdx);
-            } while (randomWayOSM.isClosed());
-            this.wayIdsMapper.put(laneId, randomWayOSM);
+        String node1Id = car.getNode1Id();
+        String node2Id = car.getNode2Id();
+        if (!NumberUtils.isCreatable(node1Id) || !NumberUtils.isCreatable(node2Id)) {
+            return;
+        }
+        NodeOSM startNode = this.osm_graph.getNodes().get(Long.parseLong(node1Id));
+        NodeOSM endNode = this.osm_graph.getNodes().get(Long.parseLong(node2Id));
+        if (startNode == null || endNode == null) {
+            return;
         }
 
-        WayOSM wayOSM = this.wayIdsMapper.get(laneId);
-        NodeOSM startNode = wayOSM.getEdges().get(0).getStartNode();
-        NodeOSM endNode = wayOSM.getEdges().get(wayOSM.getEdges().size() - 1).getEndNode();
+        double positionOnLane = car.getPositionOnLane();
 
         WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
         WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
@@ -189,12 +187,6 @@ public class MapPane extends Pane {
 
         this.drawNode(carX, carY, Color.RED);
     }
-
-    // TODO remove
-    public static int getRandomIndex(int min, int max) {
-        return ((int) (Math.random() * (max - min))) + min;
-    }
-
 
     /**
      * drawNode method draws one node

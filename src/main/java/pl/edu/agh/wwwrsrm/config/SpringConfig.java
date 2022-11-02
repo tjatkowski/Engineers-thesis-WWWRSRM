@@ -13,7 +13,7 @@ public class SpringConfig {
 
     @Bean
     public MapPane mapPane() {
-        GraphOSM osm_graph = osmParser.CreateGraph("src/main/resources/osm/cracow.pbf");
+        GraphOSM osm_graph = osmParser.CreateGraph("src/main/resources/osm/half_cracow.pbf");
         return new MapPane(osm_graph);
     }
 

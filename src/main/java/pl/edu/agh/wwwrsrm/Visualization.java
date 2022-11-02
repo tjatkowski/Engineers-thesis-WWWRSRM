@@ -50,7 +50,7 @@ public class Visualization extends Application {
         stage.show();
 
         // uncomment this to start consuming cars immediately after application start
-//        this.context.publishEvent(new ApplicationStartedEvent(this));
+        this.context.publishEvent(new ApplicationStartedEvent(this));
     }
 
     @Override
