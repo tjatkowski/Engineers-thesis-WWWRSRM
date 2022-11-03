@@ -30,7 +30,7 @@ public abstract class AbstractDistanceCalculator {
     /**
      * ground resolution [meter / pixel]
      */
-    protected double groundResolution(double latitude, int zoomLevel) {
+    public double groundResolution(double latitude, int zoomLevel) {
         int mapWidth = (int) (256 * Math.pow(2, zoomLevel));
         return (Math.cos((latitude * Math.PI) / 180) * 2 * PI * R) / mapWidth;
     }
