@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import pl.edu.agh.wwwrsrm.events.ApplicationStartedEvent;
 import pl.edu.agh.wwwrsrm.window.Window;
 
 

@@ -20,7 +20,7 @@ public class CarsLayer extends Layer {
 
     private final Map<String, Car> cars;
 
-    private final Map<Integer, Double> resolution = new HashMap<Integer, Double>();
+    private final Map<Integer, Double> resolution = new HashMap<>();
 
     private double currentResolution = 1.0;
 
@@ -108,6 +108,5 @@ public class CarsLayer extends Layer {
         gc.setFill(color);
         gc.fillRoundRect(x, y, length, width, 4/ currentResolution, 4/ currentResolution);
         gc.restore();
-
     }
 }

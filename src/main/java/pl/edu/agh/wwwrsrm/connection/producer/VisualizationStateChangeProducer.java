@@ -25,7 +25,7 @@ public class VisualizationStateChangeProducer {
                 .setStateChange(running_state)
                 .build();
 
-        var record = new ProducerRecord<String, VisualizationStateChangeMessage>(TopicConfiguration.SIMULATION_STATE_CHANGE_TOPIC,
+        var record = new ProducerRecord<String, VisualizationStateChangeMessage>(TopicConfiguration.VISUALIZATION_STATE_CHANGE_TOPIC,
                 simulationStateChangeMessage);
         ListenableFuture<SendResult<String, VisualizationStateChangeMessage>> future = kafkaVisualizationStateTemplate.send(record);
 
