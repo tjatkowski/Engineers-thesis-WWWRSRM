@@ -22,6 +22,8 @@ import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
 import pl.edu.agh.wwwrsrm.window.Style;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 @Component
@@ -67,7 +69,15 @@ public class Map extends Canvas {
     }
 
     public void clearCars() {
-        //cars.clear();
+        for(Iterator<Entry<String, Car>> it = cars.entrySet().iterator(); it.hasNext(); ) {
+            Entry<String, Car> entry = it.next();
+            if (entry.getValue().toDelete) {
+                it.remove();
+            }
+            else {
+                entry.getValue().toDelete = true;
+            }
+        }
     }
 
     public void updateCar(Car car) {

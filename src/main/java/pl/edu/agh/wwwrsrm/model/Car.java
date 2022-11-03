@@ -25,7 +25,11 @@ public class Car {
 
     private double progress = 0;
 
+    public boolean toDelete = false;
+
     public void update(Car car) {
+        toDelete = false;
+
         this.lastNode1Id = this.node1Id;
         this.lastNode2Id = this.node2Id;
         this.lastPositionOnLane = this.positionOnLane;
