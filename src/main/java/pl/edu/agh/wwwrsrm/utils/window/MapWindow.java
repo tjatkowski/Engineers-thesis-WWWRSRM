@@ -9,8 +9,8 @@ import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 @Getter
 public class MapWindow extends AbstractDistanceCalculator {
 
-    private static final int MIN_ZOOM_LEVEL = 1;
-    private static final int MAX_ZOOM_LEVEL = 23;
+    public static final int MIN_ZOOM_LEVEL = 1;
+    public static final int MAX_ZOOM_LEVEL = 23;
     private static final double PI = Math.PI;
     private static final int R = 6378137;
 
