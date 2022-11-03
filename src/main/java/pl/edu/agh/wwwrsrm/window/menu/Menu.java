@@ -2,21 +2,20 @@ package pl.edu.agh.wwwrsrm.window.menu;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.connection.producer.VisualizationStateChangeProducer;
 import pl.edu.agh.wwwrsrm.window.Style;
-import proto.model.RUNNING_STATE;
 
-import javax.annotation.PostConstruct;
+import static proto.model.RUNNING_STATE.STARTED;
+import static proto.model.RUNNING_STATE.STOPPED;
+
 
 @Component
 public class Menu extends VBox {
-    @Autowired
-    VisualizationStateChangeProducer stateChanger;
 
-    public Menu() {
+    public Menu(VisualizationStateChangeProducer stateChanger) {
         setPrefWidth(Style.menuWidth);
         this.setStyle("-fx-background-color: #FF00FF;");
         this.setAlignment(Pos.TOP_CENTER);
@@ -26,13 +25,15 @@ public class Menu extends VBox {
         Button stopButton = new Button("Stop");
         this.getChildren().add(startButton);
         this.getChildren().add(stopButton);
-
-        startButton.onMouseClickedProperty().addListener((obs, oldValue, newValue) -> {
-            stateChanger.sendStateChangeMessage(RUNNING_STATE.STARTED);
+        startButton.setOnMouseClicked(event -> {
+            if (MouseButton.PRIMARY.equals(event.getButton())) {
+                stateChanger.sendStateChangeMessage(STARTED);
+            }
         });
-
-        stopButton.onMouseClickedProperty().addListener((obs, oldValue, newValue) -> {
-            stateChanger.sendStateChangeMessage(RUNNING_STATE.STOPPED);
+        stopButton.setOnMouseClicked(event -> {
+            if (MouseButton.PRIMARY.equals(event.getButton())) {
+                stateChanger.sendStateChangeMessage(STOPPED);
+            }
         });
     }
 }

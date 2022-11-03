@@ -5,15 +5,10 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import pl.edu.agh.wwwrsrm.events.ApplicationStartedEvent;
-import pl.edu.agh.wwwrsrm.visualization.AppPane;
-import pl.edu.agh.wwwrsrm.visualization.ConfigPane;
-import pl.edu.agh.wwwrsrm.visualization.drawing.MapDrawer;
 import pl.edu.agh.wwwrsrm.window.Window;
 
 
 public class Visualization extends Application {
-    private AppPane appPane;
     private ConfigurableApplicationContext context;
 
     public static void main(String[] args) {
@@ -23,19 +18,6 @@ public class Visualization extends Application {
     @Override
     public void init() {
         this.context = new SpringApplicationBuilder(SimulationVisualization.class).run();
-
-        // App pane
-        this.appPane = new AppPane();
-        // Map pane
-        MapDrawer mapDrawer = context.getBean(MapDrawer.class);
-        // Config pane
-        //ConfigPane configPane = new ConfigPane();
-
-        // prepare
-        mapDrawer.drawLines();
-        //configPane.loadConfig();
-
-        appPane.getChildren().addAll(mapDrawer.getMapPane());
     }
 
 
@@ -45,18 +27,16 @@ public class Visualization extends Application {
         stage.setTitle("WWWRSRM - Traffic Visualization");
         stage.setMaximized(true);
 
-//        Scene scene = new Scene(this.appPane);
-//        stage.setScene(scene);
         Window window = this.context.getBean(Window.class);
         stage.setScene(window.getScene());
         stage.show();
 
         // uncomment this to start consuming cars immediately after application start
-        this.context.publishEvent(new ApplicationStartedEvent(this));
+//        this.context.publishEvent(new ApplicationStartedEvent(this));
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         this.context.stop();
         Platform.exit();
     }
