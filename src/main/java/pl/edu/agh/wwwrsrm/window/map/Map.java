@@ -67,11 +67,16 @@ public class Map extends Canvas {
     }
 
     public void clearCars() {
-        cars.clear();
+        //cars.clear();
     }
 
     public void updateCar(Car car) {
-        cars.put(car.getCarId(), car);
+        if(cars.containsKey(car.getCarId())) {
+            cars.get(car.getCarId()).update(car);
+        } else {
+            cars.put(car.getCarId(), car);
+        }
+//        cars.put(car.getCarId(), car);
     }
 
     public void draw(double delta) {
