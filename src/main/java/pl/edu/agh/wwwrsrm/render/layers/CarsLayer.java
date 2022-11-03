@@ -5,7 +5,6 @@ import javafx.scene.paint.Color;
 import org.apache.commons.lang3.math.NumberUtils;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;
-import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.render.Layer;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
@@ -18,8 +17,6 @@ public class CarsLayer extends Layer {
 
     private final GraphOSM osm_graph;
     private final MapWindow mapWindow;
-
-    private final Map<String, WayOSM> wayIdsMapper = new HashMap<>();
 
     private final Map<String, Car> cars;
 
@@ -88,11 +85,6 @@ public class CarsLayer extends Layer {
                     Color.RED);
     }
 
-    // TODO remove
-    public static int getRandomIndex(int min, int max) {
-        return ((int) (Math.random() * (max - min))) + min;
-    }
-
     /**
      * drawNode method draws one node
      *
@@ -115,7 +107,6 @@ public class CarsLayer extends Layer {
         gc.translate(-(x + (length/2.0)), -(y + (width/2.0)));
         gc.setFill(color);
         gc.fillRoundRect(x, y, length, width, 4/ currentResolution, 4/ currentResolution);
-//        gc.fillRect(x, y, length, width);
         gc.restore();
 
     }

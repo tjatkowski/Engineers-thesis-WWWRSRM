@@ -26,13 +26,13 @@ import java.util.Vector;
 
 @Component
 public class Map extends Canvas {
-    private Vector<Layer> layers = new Vector<Layer>();
+    private final Vector<Layer> layers = new Vector<Layer>();
 
     private AnimationTimer timer;
 
-    private MapWindow mapWindow;
+    private final MapWindow mapWindow;
 
-    private GraphOSM osm_graph;
+    private final GraphOSM osm_graph;
 
     private final java.util.Map<String, Car> cars = new HashMap<>();
 
@@ -40,7 +40,7 @@ public class Map extends Canvas {
         super(Style.windowWidth - Style.menuWidth, Style.windowHeight);
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
-        osm_graph = osmParser.CreateGraph("src/main/resources/osm/cracow.pbf");
+        osm_graph = osmParser.CreateGraph("src/main/resources/osm/half_cracow.pbf");
         this.mapWindow = new MapWindow(osm_graph.getTopLeftBound(), osm_graph.getBottomRightBound(), (int)getWidth(), (int)getHeight());
         setTimer();
         addLayers();

@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.connection.consumer.CarsConsumer;
 import pl.edu.agh.wwwrsrm.model.Car;
-import pl.edu.agh.wwwrsrm.render.layers.CarsLayer;
-import pl.edu.agh.wwwrsrm.visualization.drawing.MapDrawer;
 import pl.edu.agh.wwwrsrm.window.map.Map;
 
 import java.util.LinkedList;
@@ -17,7 +15,6 @@ import java.util.LinkedList;
 public class VisualizationTask implements Runnable {
 
     private final CarsConsumer consumer;
-    private final MapDrawer mapDrawer;
 
     private final Map map;
 
