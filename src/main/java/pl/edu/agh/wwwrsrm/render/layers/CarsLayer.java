@@ -54,6 +54,14 @@ public class CarsLayer extends Layer {
         return angle;
     }
 
+    private double lerp(double a, double b, double f) {
+        return a + f * (b - a);
+    }
+
+    private double parabola(double t, double k) {
+        return lerp(0.5, 0.85, Math.pow(4.0 * t * (1.0 - t), k));
+    }
+
     /**
      * drawCar method draw car on the MapPane
      */
@@ -61,11 +69,23 @@ public class CarsLayer extends Layer {
     public void drawCar(GraphicsContext gc, Car car) {
         String node1Id = car.getNode1Id();
         String node2Id = car.getNode2Id();
+        String lastNode1Id = car.getLastNode1Id();
+        String lastNode2Id = car.getLastNode2Id();
+        boolean noHistory = !NumberUtils.isCreatable(lastNode1Id) || !NumberUtils.isCreatable(lastNode2Id);
         if (!NumberUtils.isCreatable(node1Id) || !NumberUtils.isCreatable(node2Id)) {
             return;
         }
         NodeOSM startNode = this.osm_graph.getNodes().get(Long.parseLong(node1Id));
         NodeOSM endNode = this.osm_graph.getNodes().get(Long.parseLong(node2Id));
+        NodeOSM lastStartNode = null;
+        NodeOSM lastEndNode = null;
+        if(!noHistory) {
+            lastStartNode = this.osm_graph.getNodes().get(Long.parseLong(lastNode1Id));
+            lastEndNode = this.osm_graph.getNodes().get(Long.parseLong(lastNode2Id));
+        }
+        if(lastStartNode == null || lastEndNode == null) {
+            noHistory = true;
+        }
         if (startNode == null || endNode == null) {
             return;
         }
@@ -73,14 +93,49 @@ public class CarsLayer extends Layer {
         double positionOnLane = car.getPositionOnLane();
         WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
         WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
+        WindowXYCoordinate lastStartNodeWindowXY = null;
+        WindowXYCoordinate lastEndNodeWindowXY = null;
+        double lastPositionOnLane = car.getLastPositionOnLane();
+        if(!noHistory) {
+            lastStartNodeWindowXY = lastStartNode.getCoordinate().convertToWindowXY(mapWindow);
+            lastEndNodeWindowXY = lastEndNode.getCoordinate().convertToWindowXY(mapWindow);
+        }
 
-        double carX = startNodeWindowXY.getX() + positionOnLane * (endNodeWindowXY.getX() - startNodeWindowXY.getX());
-        double carY = startNodeWindowXY.getY() + positionOnLane * (endNodeWindowXY.getY() - startNodeWindowXY.getY());
+        double endX = startNodeWindowXY.getX() + positionOnLane * (endNodeWindowXY.getX() - startNodeWindowXY.getX());
+        double endY = startNodeWindowXY.getY() + positionOnLane * (endNodeWindowXY.getY() - startNodeWindowXY.getY());
+        double startX;
+        double startY;
+        if(!noHistory) {
+            startX = lastStartNodeWindowXY.getX() + lastPositionOnLane * (lastEndNodeWindowXY.getX() - lastStartNodeWindowXY.getX());
+            startY = lastStartNodeWindowXY.getY() + lastPositionOnLane * (lastEndNodeWindowXY.getY() - lastStartNodeWindowXY.getY());
+        }
+        else {
+            startX = endX;
+            startY = endY;
+        }
+
+        double progress = car.getProgress();
+        if(progress > 1.0) {
+            progress = 1.0;
+        }
+
+        double currentX = startX + progress*(endX - startX);
+        double currentY = startY + progress*(endY - startY);
+        car.setProgress(progress + (parabola(progress, 2))/50.0);
+
+        double endR = getAngle(endNodeWindowXY.getX(), endNodeWindowXY.getY(), startNodeWindowXY.getX(), startNodeWindowXY.getY());
+        double startR;
+        if(!noHistory)
+            startR = getAngle(lastEndNodeWindowXY.getX(), lastEndNodeWindowXY.getY(), lastStartNodeWindowXY.getX(), lastStartNodeWindowXY.getY());
+        else
+            startR = endR;
+        if (endR - startR > (endR+360)-startR)
+            startR += 360;
 
         this.drawNode(gc,
-                    carX,
-                    carY,
-                    getAngle(endNodeWindowXY.getX(), endNodeWindowXY.getY(), startNodeWindowXY.getX(), startNodeWindowXY.getY()),
+                    currentX,
+                    currentY,
+                    startR + progress*(endR - startR),
                     car.getLength(),
                     Color.RED);
     }

@@ -29,7 +29,8 @@ public class VisualizationTask implements Runnable {
         while (!cars.isEmpty()) {
             Car car = cars.poll();
 //                        log.info("Consumed carId : {}", car.getCarId());
-            map.updateCar(car);
+            if(car != null)
+                map.updateCar(car);
         }
         log.info("End consuming cars");
     }
