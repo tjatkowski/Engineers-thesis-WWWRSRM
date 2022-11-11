@@ -71,22 +71,21 @@ public class Map extends Canvas {
     public void clearCars() {
         for(Iterator<Entry<String, Car>> it = cars.entrySet().iterator(); it.hasNext(); ) {
             Entry<String, Car> entry = it.next();
-            if (entry.getValue().toDelete) {
+            if (entry.getValue().isToDelete()) {
                 it.remove();
             }
             else {
-                entry.getValue().toDelete = true;
+                entry.getValue().setToDelete();
             }
         }
     }
 
     public void updateCar(Car car) {
-        if(cars.containsKey(car.getCarId())) {
-            cars.get(car.getCarId()).update(car);
-        } else {
+        Car carToUpdate = cars.get(car.getCarId());
+        if(carToUpdate != null)
+            carToUpdate.update(car);
+        else
             cars.put(car.getCarId(), car);
-        }
-//        cars.put(car.getCarId(), car);
     }
 
     public void draw(double delta) {
