@@ -30,7 +30,9 @@ public class CarsConsumer {
                     cr.value().getClass().getSimpleName(), cr.partition(), cr.offset());
             var d = new Date(cr.timestamp());
             log.info(String.valueOf(d));
-            cr.value().getCarsMessagesList().forEach(carMessage -> {
+            CarsMessage carsMessage = cr.value();
+            log.info("IterationNumber={}", carsMessage.getIterationNumber());
+            carsMessage.getCarsMessagesList().forEach(carMessage -> {
                 Car car = Car.builder()
                         .carId(carMessage.getCarId())
                         .length(carMessage.getLength())
