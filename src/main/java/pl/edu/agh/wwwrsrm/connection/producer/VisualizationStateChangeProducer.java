@@ -9,9 +9,9 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
-import pl.edu.agh.wwwrsrm.connection.config.TopicConfiguration;
-import proto.model.RUNNING_STATE;
 import proto.model.VisualizationStateChangeMessage;
+
+import static pl.edu.agh.wwwrsrm.connection.config.TopicConfiguration.VISUALIZATION_STATE_CHANGE_TOPIC;
 
 @Slf4j
 @Service
@@ -20,25 +20,21 @@ public class VisualizationStateChangeProducer {
 
     private final KafkaTemplate<String, VisualizationStateChangeMessage> kafkaVisualizationStateTemplate;
 
-    public void sendStateChangeMessage(RUNNING_STATE running_state) {
-        VisualizationStateChangeMessage simulationStateChangeMessage = VisualizationStateChangeMessage.newBuilder()
-                .setStateChange(running_state)
-                .build();
-
-        var record = new ProducerRecord<String, VisualizationStateChangeMessage>(TopicConfiguration.VISUALIZATION_STATE_CHANGE_TOPIC,
-                simulationStateChangeMessage);
+    public void sendStateChangeMessage(VisualizationStateChangeMessage visualizationStateChangeMessage) {
+        var record = new ProducerRecord<String, VisualizationStateChangeMessage>(VISUALIZATION_STATE_CHANGE_TOPIC, visualizationStateChangeMessage);
         ListenableFuture<SendResult<String, VisualizationStateChangeMessage>> future = kafkaVisualizationStateTemplate.send(record);
 
         future.addCallback(new ListenableFutureCallback<>() {
             @Override
-            public void onSuccess(SendResult<String, VisualizationStateChangeMessage
-                    > result) {
-                log.info("VisualizationStateChangeMessage send: {}", simulationStateChangeMessage.getStateChange());
+            public void onSuccess(SendResult<String, VisualizationStateChangeMessage> result) {
+                log.info("VisualizationStateChangeMessage send: stateChange={}, ROIRegion={}, ZoomLevel={}, VisualizationSpeed={}",
+                        visualizationStateChangeMessage.getStateChange(), visualizationStateChangeMessage.getRoiRegion(),
+                        visualizationStateChangeMessage.getZoomLevel(), visualizationStateChangeMessage.getVisualizationSpeed());
             }
 
             @Override
             public void onFailure(@NotNull Throwable ex) {
-                log.info("Error while sending message: {}", simulationStateChangeMessage + " " + ex.getMessage());
+                log.info("Error while sending message: {} {}", visualizationStateChangeMessage, ex.getMessage());
             }
         });
     }
