@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.connection.producer.VisualizationStateChangeProducer;
 import pl.edu.agh.wwwrsrm.window.Style;
+import proto.model.VisualizationStateChangeMessage;
 
 import static proto.model.RUNNING_STATE.*;
 
@@ -31,17 +32,29 @@ public class Menu extends VBox {
         this.getChildren().add(stopButton);
         startButton.setOnMouseClicked(event -> {
             if (MouseButton.PRIMARY.equals(event.getButton())) {
-                stateChanger.sendStateChangeMessage(STARTED);
+                //TODO fill rest of the values
+                VisualizationStateChangeMessage visualizationStateChangeMessage = VisualizationStateChangeMessage.newBuilder()
+                        .setStateChange(STARTED)
+                        .build();
+                stateChanger.sendStateChangeMessage(visualizationStateChangeMessage);
             }
         });
         resumeButton.setOnMouseClicked(event -> {
             if (MouseButton.PRIMARY.equals(event.getButton())) {
-                stateChanger.sendStateChangeMessage(RESUMED);
+                //TODO fill rest of the values
+                VisualizationStateChangeMessage visualizationStateChangeMessage = VisualizationStateChangeMessage.newBuilder()
+                        .setStateChange(RESUMED)
+                        .build();
+                stateChanger.sendStateChangeMessage(visualizationStateChangeMessage);
             }
         });
         stopButton.setOnMouseClicked(event -> {
             if (MouseButton.PRIMARY.equals(event.getButton())) {
-                stateChanger.sendStateChangeMessage(STOPPED);
+                //TODO fill rest of the values
+                VisualizationStateChangeMessage visualizationStateChangeMessage = VisualizationStateChangeMessage.newBuilder()
+                        .setStateChange(STOPPED)
+                        .build();
+                stateChanger.sendStateChangeMessage(visualizationStateChangeMessage);
             }
         });
     }
