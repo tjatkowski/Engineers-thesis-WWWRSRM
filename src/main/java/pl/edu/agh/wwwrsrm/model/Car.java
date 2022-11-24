@@ -10,6 +10,7 @@ import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
+import proto.model.CarMessage;
 
 import static pl.edu.agh.wwwrsrm.utils.Interpolation.lerp;
 
@@ -52,6 +53,10 @@ public class Car {
     }
 
     private static double getAngle(double lastRotation, double targetRotation, double progress) {
+        if(targetRotation - lastRotation > 180)
+            targetRotation -= 360;
+        else if(targetRotation - lastRotation < -180)
+            targetRotation += 360;
         return lerp(lastRotation, targetRotation, progress);
     }
 
@@ -120,7 +125,7 @@ public class Car {
         multiplier += offset / 3.0;
     }
 
-    public void update(Car car) {
+    public void update(CarMessage car) {
         setNotToDelete();
 
         this.lastNode1Id = this.node1Id;
