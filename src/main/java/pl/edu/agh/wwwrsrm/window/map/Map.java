@@ -8,6 +8,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
+import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.osm.osmParser;
 import pl.edu.agh.wwwrsrm.render.Layer;
@@ -20,9 +21,11 @@ import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 import pl.edu.agh.wwwrsrm.visualization.MapDraggingHandler;
 import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
 import pl.edu.agh.wwwrsrm.window.Style;
+import proto.model.Node;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
 
@@ -78,6 +81,11 @@ public class Map extends Canvas {
                 entry.getValue().setToDelete();
             }
         }
+    }
+
+    public void addNodes(List<Node> nodes) {
+        for (Node node : nodes)
+            osm_graph.addNode(new NodeOSM(node));
     }
 
     public void updateCar(Car car) {
