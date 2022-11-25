@@ -1,0 +1,244 @@
+{
+  "detached": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "secondary_link": {
+    "zoomLevel": 14,
+    "wayWidth": 17,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "trunk_link": {
+    "zoomLevel": 12,
+    "wayWidth": 8,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "river": {
+    "zoomLevel": 10,
+    "wayWidth": 60,
+    "color": {
+      "red": 0.0,
+      "green": 0.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "waterway"
+  },
+  "house": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "dormitory": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "secondary": {
+    "zoomLevel": 11,
+    "wayWidth": 17,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "tertiary": {
+    "zoomLevel": 12,
+    "wayWidth": 13,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "trunk": {
+    "zoomLevel": 9,
+    "wayWidth": 8,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "residential": {
+    "zoomLevel": 15,
+    "wayWidth": 8,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "primary": {
+    "zoomLevel": 10,
+    "wayWidth": 20,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "farm": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "apartments": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "motorway": {
+    "zoomLevel": 5,
+    "wayWidth": 30,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "primary_link": {
+    "zoomLevel": 13,
+    "wayWidth": 20,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "unclassified": {
+    "zoomLevel": 14,
+    "wayWidth": 8,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "motorway_link": {
+    "zoomLevel": 11,
+    "wayWidth": 30,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "bungalow": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "hotel": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "barracks": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  },
+  "tertiary_link": {
+    "zoomLevel": 15,
+    "wayWidth": 13,
+    "color": {
+      "red": 1.0,
+      "green": 1.0,
+      "blue": 1.0,
+      "opacity": 1.0
+    },
+    "type": "highway"
+  },
+  "cabin": {
+    "zoomLevel": 15,
+    "wayWidth": 5,
+    "color": {
+      "red": 0.6627451,
+      "green": 0.6627451,
+      "blue": 0.6627451,
+      "opacity": 1.0
+    },
+    "type": "building"
+  }
+}

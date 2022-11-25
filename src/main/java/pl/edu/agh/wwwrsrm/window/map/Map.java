@@ -45,7 +45,7 @@ public class Map extends Canvas {
         super(Style.windowWidth - Style.menuWidth, Style.windowHeight);
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
-        osm_graph = osmParser.CreateGraph("src/main/resources/osm/half_cracow.pbf");
+        osm_graph = osmParser.CreateGraph("src/main/resources/osm/half_cracow.pbf", "src/main/resources/osm/parameters/way_parameters.json");
         this.mapWindow = new MapWindow(osm_graph.getTopLeftBound(), osm_graph.getBottomRightBound(), (int)getWidth(), (int)getHeight());
         setTimer();
         addLayers();
