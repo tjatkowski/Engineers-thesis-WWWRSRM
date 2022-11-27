@@ -1,7 +1,7 @@
 package pl.edu.agh.wwwrsrm.graph;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
 import java.util.*;
@@ -10,17 +10,15 @@ import java.util.*;
  * GraphOSM implements road graph
  */
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class GraphOSM {
-    private final Map<Long, NodeOSM> nodes = new HashMap<>();
-    private final List<WayOSM> ways = new ArrayList<>();
+    private final Map<Long, NodeOSM> nodes;
+    private final Map<Long, WayOSM> ways;
+    private final Map<NodeIdPairKey, Long> nodePairToWayMap;
 
+    //TODO remove
     public void addNode(NodeOSM node) {
         this.nodes.put(node.getId(), node);
-    }
-
-    public void addWay(WayOSM way) {
-        this.ways.add(way);
     }
 
     /**

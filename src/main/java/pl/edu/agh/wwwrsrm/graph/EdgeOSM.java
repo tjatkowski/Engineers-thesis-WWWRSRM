@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class EdgeOSM {
-    private final long id;
+    private final long wayId;
     private final NodeOSM startNode;
     private final NodeOSM endNode;
 }
