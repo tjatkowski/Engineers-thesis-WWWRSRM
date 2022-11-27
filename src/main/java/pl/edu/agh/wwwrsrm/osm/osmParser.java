@@ -7,10 +7,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import pl.edu.agh.wwwrsrm.graph.EdgeOSM;
-import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.graph.NodeOSM;
-import pl.edu.agh.wwwrsrm.graph.WayOSM;
+import pl.edu.agh.wwwrsrm.graph.*;
 import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
 import java.io.FileInputStream;
@@ -18,6 +15,9 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,7 +56,9 @@ public class osmParser {
         Map<Long, Node> allNodes = myOsmReader.getNodes();
         Map<Long, Way> allWays = myOsmReader.getWays();
 
-        GraphOSM osm_graph = new GraphOSM();
+        Map<Long, NodeOSM> nodes = new HashMap<>();
+        Map<Long, WayOSM> ways = new HashMap<>();
+        Map<NodeIdPairKey, Long> nodeIdPairToWayIdMap = new HashMap<>();
 
         for (Way way : allWays.values()) {
             if (way.getWayNodes().size() < 2) {
@@ -74,24 +76,27 @@ public class osmParser {
                 continue;
             }
 
-            WayOSM osmWay;
-            if (!wayParameters.getType().equals("highway") && WayOSM.checkIfClosed(way)) {
-                osmWay = new WayOSM(true, wayParameters);
-            } else {
-                osmWay = new WayOSM(false, wayParameters);
-            }
-
+            long wayId = way.getId();
+            List<EdgeOSM> edges = new LinkedList<>();
             way.getWayNodes().stream().map(WayNode::getNodeId).map(allNodes::get)
                     .map(node -> new NodeOSM(node.getId(), new LonLatCoordinate(node.getLongitude(), node.getLatitude())))
                     .reduce((node1, node2) -> {
-                        osm_graph.addNode(node1);
-                        osm_graph.addNode(node2);
-                        osmWay.addEdge(new EdgeOSM(way.getId(), node1, node2));
+                        nodes.putIfAbsent(node1.getId(), node1);
+                        nodes.putIfAbsent(node2.getId(), node2);
+                        edges.add(new EdgeOSM(wayId, node1, node2));
+                        nodeIdPairToWayIdMap.put(new NodeIdPairKey(node1.getId(), node2.getId()), wayId);
                         return node2;
                     });
-            osm_graph.addWay(osmWay);
+            boolean isWayClosed = !wayParameters.getType().equals("highway") && checkIfClosed(way);
+            WayOSM osmWay = new WayOSM(wayId, edges, wayParameters, isWayClosed);
+            ways.put(wayId, osmWay);
         }
-        return osm_graph;
+        return new GraphOSM(nodes, ways, nodeIdPairToWayIdMap);
+    }
+
+    private static boolean checkIfClosed(Way way) {
+        List<WayNode> wayNodes = way.getWayNodes();
+        return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size() - 1).getNodeId();
     }
 
 }
