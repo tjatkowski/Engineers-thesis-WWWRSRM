@@ -1,23 +1,28 @@
 package pl.edu.agh.wwwrsrm.window;
 
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 import org.springframework.stereotype.Component;
-import pl.edu.agh.wwwrsrm.window.menu.Menu;
 import pl.edu.agh.wwwrsrm.window.map.Map;
+import pl.edu.agh.wwwrsrm.window.menu.Menu;
+
+import static pl.edu.agh.wwwrsrm.window.Style.*;
 
 @Component
-public class Window  {
+public class Window {
     private final Scene scene;
 
     public Window(Menu menu, Map map) {
-        HBox hbox = new HBox();
-        hbox.setPrefSize(Style.windowWidth, Style.windowHeight);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        hbox.getChildren().add(menu);
-        hbox.getChildren().add(map);
+        borderPane.setCenter(map);
+        map.widthProperty().bind(borderPane.widthProperty().subtract(MENU_WIDTH));
+        map.heightProperty().bind(borderPane.heightProperty());
 
-        scene = new Scene(hbox);
+        borderPane.setRight(menu);
+
+        scene = new Scene(borderPane);
     }
 
     public Scene getScene() {
