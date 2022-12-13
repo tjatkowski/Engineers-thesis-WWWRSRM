@@ -20,8 +20,6 @@ public class Visualization extends Application {
         this.context = new SpringApplicationBuilder(SimulationVisualization.class).run();
     }
 
-
-    // TODO: Add responsiveness (Actually working well on FullHD (1920x1080))
     @Override
     public void start(Stage stage) {
         stage.setTitle("WWWRSRM - Traffic Visualization");
@@ -30,9 +28,6 @@ public class Visualization extends Application {
         Window window = this.context.getBean(Window.class);
         stage.setScene(window.getScene());
         stage.show();
-
-        // uncomment this to start consuming cars immediately after application start
-//        this.context.publishEvent(new ApplicationStartedEvent(this));
     }
 
     @Override

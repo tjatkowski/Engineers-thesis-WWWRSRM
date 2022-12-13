@@ -21,10 +21,10 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 /**
- * osmParser class parses nodes and ways read by OsmReader and creates road graph.
+ * OsmParser class parses nodes and ways read by OsmReader and creates road graph.
  * Only ways with 'highway' key parameter and values indicating possibility of car driving on them are considered.
  */
-public class osmParser {
+public class OsmParser {
 
     /**
      * CreateGraph method creates road graph based on nodes and ways read by OsmReader
