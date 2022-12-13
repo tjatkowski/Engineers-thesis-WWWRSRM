@@ -12,8 +12,7 @@ import pl.edu.agh.wwwrsrm.utils.TrafficDensity;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RoadsLayer extends DrawerLayer {
 
@@ -35,8 +34,16 @@ public class RoadsLayer extends DrawerLayer {
 
     @Override
     public void draw(GraphicsContext gc, double delta) {
+        Random rand = new Random(2);
+
+
+        int n = rand.nextInt(50);
+
         synchronized (trafficDensity) {
             for (WayOSM way : osm_graph.getWays()) {
+                double r = 0.4+rand.nextFloat()/2.0;
+                double g = 0.4+rand.nextFloat()/2.0;
+                double b = 0.4+rand.nextFloat()/2.0;
                 WayParameters wayParameters = way.getEdgeParameter();
                 int wayMinZoomLevel = wayParameters.getZoomLevel();
 
@@ -46,24 +53,50 @@ public class RoadsLayer extends DrawerLayer {
                 if (wayWidth < 1.0) {
                     continue;
                 }
-
+                int density = 0;
                 if (!way.isClosed() && !wayParameters.getType().equals("waterway")) {
-                    for (EdgeOSM edge : way.getEdges()) {
-                        NodeOSM startNode = edge.getStartNode();
-                        NodeOSM endNode = edge.getEndNode();
-                        if (mapWindow.isInsideWindow(startNode.getCoordinate()) || mapWindow.isInsideWindow(endNode.getCoordinate())) {
-                            long id1 = java.lang.Math.min(startNode.getId(), endNode.getId());
-                            long id2 = java.lang.Math.max(startNode.getId(), endNode.getId());
-                            Road road = trafficDensity.getRoad(id1, id2);
-
-                            WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
-                            WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
-                            // drawing in canvas
-                            this.drawLineInCanvas(gc, startNodeWindowXY, endNodeWindowXY, wayWidth, (road != null && road.getDensity() > 0) ? Color.PINK : wayColor);
-                        }
-                    }
+                    drawWay(way, gc, delta, wayWidth, new Color(r,g,b,1.0));
                 }
             }
         }
+
+
+    }
+
+    void drawWay(WayOSM way, GraphicsContext gc, double delta, double width, Color color) {
+        List<Double> xs = new ArrayList<>();
+        List<Double> ys = new ArrayList<>();
+        int size = 0;
+        boolean first = true;
+
+        int density = 0;
+        for(EdgeOSM edge : way.getEdges()) {
+            NodeOSM startNode = edge.getStartNode();
+            NodeOSM endNode = edge.getEndNode();
+            if (mapWindow.isInsideWindow(startNode.getCoordinate()) || mapWindow.isInsideWindow(endNode.getCoordinate())) {
+                long id1 = java.lang.Math.min(startNode.getId(), endNode.getId());
+                long id2 = java.lang.Math.max(startNode.getId(), endNode.getId());
+
+                Road road = trafficDensity.getRoad(id1, id2);
+                if(road != null)
+                    density += road.getDensity();
+
+                WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
+                WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
+                // drawing in canvas
+                if(first) {
+                    first = false;
+                    xs.add((double)startNodeWindowXY.getX());
+                    ys.add((double)startNodeWindowXY.getY());
+                    size++;
+                }
+                xs.add((double)endNodeWindowXY.getX());
+                ys.add((double)endNodeWindowXY.getY());
+                size++;
+            }
+
+        }
+        drawPath(gc, xs, ys, size, width, new Color(1.0, Math.max(0.0, 1.0-0.2*density), Math.max(0.0, 1.0-0.2*density), 1.0));
+
     }
 }

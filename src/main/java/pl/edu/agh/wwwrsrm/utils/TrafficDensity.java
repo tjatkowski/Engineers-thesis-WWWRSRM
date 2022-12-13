@@ -61,7 +61,7 @@ public class TrafficDensity {
     }
 
     public void processCarMessage(CarMessage carMessage) {
-        if(osm_graph == null)
+        if (osm_graph == null)
             return;
 
         long startNode = Long.parseLong(carMessage.getNode1Id());
@@ -78,30 +78,7 @@ public class TrafficDensity {
                     .node2Id(minEndNode)
                     .build());
         } else {
-//                    road.increaseDensity();
+            road.increaseDensity();
         }
-//        for (WayOSM way : osm_graph.getWays()) {
-//            for (EdgeOSM edge : way.getEdges()) {
-//                if (!isCarOnEdge(carMessage, edge))
-//                    continue;
-//                long startNode = edge.getStartNode().getId();
-//                long endNode = edge.getEndNode().getId();
-//
-//                long minStartNode = min(startNode, endNode);
-//                long minEndNode = java.lang.Math.max(startNode, endNode);
-//
-//                Road road = getRoad(minStartNode, minEndNode);
-//                if (road == null) {
-//                    putRoad(minStartNode, minEndNode, Road.builder()
-//                            .density(1)
-//                            .node1Id(minStartNode)
-//                            .node2Id(minEndNode)
-////                            .way(way)
-//                            .build());
-//                } else {
-////                    road.increaseDensity();
-//                }
-//            }
-//        }
     }
 }
