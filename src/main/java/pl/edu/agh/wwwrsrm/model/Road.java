@@ -11,7 +11,7 @@ public class Road {
     int density;
     long node1Id;
     long node2Id;
-//    WayOSM way;
+    long wayId;
 
     public void increaseDensity() {
         density++;
