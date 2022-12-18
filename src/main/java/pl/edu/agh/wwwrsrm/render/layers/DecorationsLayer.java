@@ -35,7 +35,7 @@ public class DecorationsLayer extends DrawerLayer {
 
     @Override
     public void draw(GraphicsContext gc, double delta) {
-        for (WayOSM way : osm_graph.getWays()) {
+        for (WayOSM way : osm_graph.getWays().values()) {
             WayParameters wayParameters = way.getEdgeParameter();
             int wayMinZoomLevel = wayParameters.getZoomLevel();
 

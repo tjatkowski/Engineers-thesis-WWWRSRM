@@ -40,7 +40,7 @@ public class RoadsLayer extends DrawerLayer {
         int n = rand.nextInt(50);
 
         synchronized (trafficDensity) {
-            for (WayOSM way : osm_graph.getWays()) {
+            for (WayOSM way : osm_graph.getWays().values()) {
                 double r = 0.4+rand.nextFloat()/2.0;
                 double g = 0.4+rand.nextFloat()/2.0;
                 double b = 0.4+rand.nextFloat()/2.0;
