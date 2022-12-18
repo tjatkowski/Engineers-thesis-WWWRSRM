@@ -38,16 +38,27 @@ public class RoadsLayer extends DrawerLayer {
     @Override
     public void draw(GraphicsContext gc, double delta) {
         synchronized (trafficDensity) {
-            for (WayOSM way : osm_graph.getWays().values()) {
+            osm_graph.getWays().values().stream().sorted((w1, w2) -> {
+                Road r1 = trafficDensity.getRoad(w1.getWayId());
+                if(r1 == null)
+                    return -1;
+                Road r2 = trafficDensity.getRoad(w2.getWayId());
+                if(r2 == null)
+                    return 1;
+
+                int d1 = r1.getDensity();
+                int d2 = r2.getDensity();
+                return Integer.compare(d1, d2);
+            }).forEach(way -> {
                 WayParameters wayParameters = way.getEdgeParameter();
                 int wayMinZoomLevel = wayParameters.getZoomLevel();
 
                 double wayWidth = (double) wayParameters.getWayWidth() / resolution.get(mapWindow.getZoomLevel());
                 Color wayColor = wayParameters.getColor();
 
-                if (wayWidth < 1.0) {
-                    continue;
-                }
+                if (wayWidth < 1.0)
+                    return;
+
                 int density = 0;
                 Road road = trafficDensity.getRoad(way.getWayId());
                 if(road != null)
@@ -56,7 +67,7 @@ public class RoadsLayer extends DrawerLayer {
                     drawWay(way, gc, delta, wayWidth, new Color(1.0, Math.max(0.0, 1.0-0.2*density), Math.max(0.0, 1.0-0.2*density), 1.0));
 
                 }
-            }
+            });
         }
 
 

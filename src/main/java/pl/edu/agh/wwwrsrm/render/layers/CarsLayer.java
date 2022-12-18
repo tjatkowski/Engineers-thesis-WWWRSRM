@@ -58,7 +58,7 @@ public class CarsLayer extends Layer {
         Point2D position = positionRotation.getKey();
         double rotation = positionRotation.getValue();
 
-        this.drawNode(gc, position.getX(), position.getY(), rotation, car.getLength(), Color.RED);
+        this.drawNode(gc, position.getX(), position.getY(), rotation, car.getLength(), Color.BLACK);
     }
 
     /**
