@@ -39,7 +39,7 @@ public class Map extends Canvas {
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
         this.graphOSM = graphOSM;
-        this.mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight());
+        this.mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight(), null);
         VisualizationTimer visualizationTimer = new VisualizationTimer(this);
         visualizationTimer.start();
     }
@@ -79,7 +79,7 @@ public class Map extends Canvas {
         gc.setFill(Color.LIGHTGRAY);
         gc.fillRect(0, 0, getWidth(), getHeight());
         if (isMapResized) {
-            mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight());
+            mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight(), mapView);
             isMapResized = false;
         }
         mapView.getLayers()
