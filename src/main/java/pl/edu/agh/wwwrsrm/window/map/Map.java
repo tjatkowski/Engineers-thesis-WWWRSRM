@@ -7,20 +7,17 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
+import pl.edu.agh.wwwrsrm.utils.CarsManager;
+import pl.edu.agh.wwwrsrm.utils.TrafficDensity;
 import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.window.MapView;
 import pl.edu.agh.wwwrsrm.visualization.MapDraggingHandler;
 import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
 import pl.edu.agh.wwwrsrm.visualization.execution.VisualizationTimer;
 import pl.edu.agh.wwwrsrm.window.Style;
-import proto.model.Node;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
 
 @Component
 public class Map extends Canvas {
@@ -28,20 +25,30 @@ public class Map extends Canvas {
 
     private final GraphOSM graphOSM;
 
+    private final TrafficDensity trafficDensity;
+
+    private final CarsManager carsManager;
+
     private final java.util.Map<String, Car> cars = new HashMap<>();
 
     private boolean isMapResized;
 
-    public Map(GraphOSM graphOSM) {
+    public Map(GraphOSM graphOSM, CarsManager carsManager, TrafficDensity trafficDensity) {
         super(Style.WINDOW_WIDTH - Style.MENU_WIDTH, Style.WINDOW_HEIGHT);
         this.widthProperty().addListener(observable -> isMapResized = true);
         this.heightProperty().addListener(observable -> isMapResized = true);
         this.setEventHandler(MouseEvent.ANY, new MapDraggingHandler(this));
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
         this.graphOSM = graphOSM;
-        this.mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight());
+        this.carsManager = carsManager;
+        this.trafficDensity = trafficDensity;
+        createMapView();
         VisualizationTimer visualizationTimer = new VisualizationTimer(this);
         visualizationTimer.start();
+    }
+
+    private void createMapView() {
+        this.mapView = new MapView(this.carsManager, this.trafficDensity, this.graphOSM, (int) getWidth(), (int) getHeight());
     }
 
     @Override
@@ -49,37 +56,12 @@ public class Map extends Canvas {
         return true;
     }
 
-    public void clearCars() {
-        for (Iterator<Entry<String, Car>> it = cars.entrySet().iterator(); it.hasNext(); ) {
-            Entry<String, Car> entry = it.next();
-            if (entry.getValue().isToDelete()) {
-                it.remove();
-            } else {
-                entry.getValue().setToDelete();
-            }
-        }
-    }
-
-    //TODO remove, it's not Map functionality
-    public void addNodes(List<Node> nodes) {
-        for (Node node : nodes)
-            graphOSM.addNode(new NodeOSM(node));
-    }
-
-    public void updateCar(Car car) {
-        Car carToUpdate = cars.get(car.getCarId());
-        if (carToUpdate != null)
-            carToUpdate.update(car);
-        else
-            cars.put(car.getCarId(), car);
-    }
-
     public void draw(double delta) {
         GraphicsContext gc = this.getGraphicsContext2D();
         gc.setFill(Color.LIGHTGRAY);
         gc.fillRect(0, 0, getWidth(), getHeight());
         if (isMapResized) {
-            mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight());
+            createMapView();
             isMapResized = false;
         }
         mapView.getLayers()
