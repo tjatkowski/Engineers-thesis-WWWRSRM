@@ -1,34 +1,26 @@
 package pl.edu.agh.wwwrsrm.window.menu;
 
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.connection.producer.VisualizationStateChangeProducer;
-import proto.model.VisualizationStateChangeMessage;
+import pl.edu.agh.wwwrsrm.window.map.Map;
+import proto.model.RUNNING_STATE;
 
-import static pl.edu.agh.wwwrsrm.window.Style.MENU_WIDTH;
 import static proto.model.RUNNING_STATE.RESUMED;
 
 @Component
-public class ResumeButton extends Button {
+public class ResumeButton extends MenuButton {
 
-    private final VisualizationStateChangeProducer visualizationStateChangeProducer;
-
-    public ResumeButton(VisualizationStateChangeProducer visualizationStateChangeProducer) {
-        this.visualizationStateChangeProducer = visualizationStateChangeProducer;
-        this.setText("Resume");
-        this.setPrefWidth(MENU_WIDTH);
-        this.setOnMouseClicked(this::onMouseClicked);
+    public ResumeButton(VisualizationStateChangeProducer visualizationStateChangeProducer, Map visualizationMap) {
+        super(visualizationStateChangeProducer, visualizationMap);
     }
 
-    public void onMouseClicked(MouseEvent mouseEvent) {
-        if (!MouseButton.PRIMARY.equals(mouseEvent.getButton())) {
-            return;
-        }
-        VisualizationStateChangeMessage visualizationStateChangeMessage = VisualizationStateChangeMessage.newBuilder()
-                .setStateChange(RESUMED)
-                .build();
-        visualizationStateChangeProducer.sendStateChangeMessage(visualizationStateChangeMessage);
+    @Override
+    protected String getButtonName() {
+        return "Resume";
+    }
+
+    @Override
+    protected RUNNING_STATE getRunningState() {
+        return RESUMED;
     }
 }

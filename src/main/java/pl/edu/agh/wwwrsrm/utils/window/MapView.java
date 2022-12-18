@@ -10,6 +10,8 @@ import pl.edu.agh.wwwrsrm.render.layers.DebugLayer;
 import pl.edu.agh.wwwrsrm.render.layers.DecorationsLayer;
 import pl.edu.agh.wwwrsrm.render.layers.RoadsLayer;
 import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
+import proto.model.Coordinates;
+import proto.model.VisualizationStateChangeMessage;
 
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,19 @@ public class MapView {
                 .map(MapView::getMapWindow)
                 .map(MapWindow::getBottomRightPoint)
                 .orElseGet(graphOSM::getBottomRightBound);
+    }
+
+    public VisualizationStateChangeMessage.ROIRegion getRoiRegion() {
+        return VisualizationStateChangeMessage.ROIRegion.newBuilder()
+                .setTopLeftCoordinates(Coordinates.newBuilder()
+                        .setLatitude(mapWindow.getTopLeftPoint().getLatitude())
+                        .setLongitude(mapWindow.getTopLeftPoint().getLongitude())
+                        .build())
+                .setBottomRightCoordinates(Coordinates.newBuilder()
+                        .setLatitude(mapWindow.getBottomRightPoint().getLatitude())
+                        .setLongitude(mapWindow.getBottomRightPoint().getLongitude())
+                        .build())
+                .build();
     }
 
 }
