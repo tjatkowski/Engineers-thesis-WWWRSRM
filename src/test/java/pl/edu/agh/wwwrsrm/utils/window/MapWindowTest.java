@@ -17,7 +17,7 @@ public class MapWindowTest {
     static void init() {
         LonLatCoordinate topLeftPoint = new LonLatCoordinate(-30.0, 30.0);
         LonLatCoordinate bottomRightPoint = new LonLatCoordinate(30.0, -30.0);
-        mapWindow = new MapWindow(topLeftPoint, bottomRightPoint, anyInt(), anyInt());
+        mapWindow = new MapWindow(topLeftPoint, bottomRightPoint, anyInt(), anyInt(), null);
     }
 
     @ParameterizedTest
