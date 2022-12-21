@@ -1,48 +1,51 @@
 package pl.edu.agh.wwwrsrm.connection.consumer;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.springframework.context.ApplicationContext;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import pl.edu.agh.wwwrsrm.events.CarBatchReadyEvent;
 import proto.model.CarMessage;
 import proto.model.CarsMessage;
 
-import java.util.Date;
 import java.util.LinkedList;
 
 import static pl.edu.agh.wwwrsrm.connection.config.TopicConfiguration.CARS_TOPIC;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CarsConsumer {
+
+    private final ApplicationContext applicationContext;
+
     @Getter
     private final LinkedList<CarMessage> carMessages = new LinkedList<>();
+    private int currentIterationNumber;
 
     @KafkaListener(topics = CARS_TOPIC, groupId = CARS_TOPIC, batch = "true", properties = {
             "specific.protobuf.value.type: proto.model.CarsMessage"
     })
     void carsListener(ConsumerRecords<String, CarsMessage> records) {
         log.info("Start batch processing");
-
-        synchronized (this) {
-            for (ConsumerRecord<String, CarsMessage> cr : records) {
-                log.info("Received cars [data:{}, partition:{}, offset:{}]",
-                        cr.value().getClass().getSimpleName(), cr.partition(), cr.offset());
-                var d = new Date(cr.timestamp());
-                log.info(String.valueOf(d));
-                CarsMessage carsMessage = cr.value();
-                log.info("IterationNumber={}", carsMessage.getIterationNumber());
-                this.carMessages.addAll(carsMessage.getCarsMessagesList());
-
+        for (ConsumerRecord<String, CarsMessage> cr : records) {
+            CarsMessage carsMessage = cr.value();
+            int iterationNumber = (int) carsMessage.getIterationNumber();
+            log.info("Received [cars:{}, iteration: {}, partition:{}, offset:{}]", carsMessage.getCarsMessagesCount(),
+                    iterationNumber, cr.partition(), cr.offset());
+            if (iterationNumber > currentIterationNumber) {
+                currentIterationNumber = iterationNumber;
+                applicationContext.publishEvent(new CarBatchReadyEvent(this, carMessages.stream().toList()));
+                carMessages.clear();
+            } else if (iterationNumber < currentIterationNumber) {
+                continue;
             }
-        log.info("End batch processing");
-        System.out.println("Current cars size : " + this.carMessages.size());
+            this.carMessages.addAll(carsMessage.getCarsMessagesList());
         }
-    }
-
-    public void clearMessages() {
-        this.carMessages.clear();
+        log.info("End car batch processing");
     }
 }

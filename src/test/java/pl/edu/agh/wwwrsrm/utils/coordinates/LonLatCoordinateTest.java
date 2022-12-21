@@ -36,7 +36,7 @@ public class LonLatCoordinateTest {
         LonLatCoordinate lonLatCoordinate = new LonLatCoordinate(longitude, latitude);
         MapWindow mapWindow = new MapWindow(new LonLatCoordinate(topLeftLongitude, topLeftLatitude),
                 new LonLatCoordinate(bottomRightLongitude, bottomRightLatitude),
-                mapWidth, mapHeight);
+                mapWidth, mapHeight, null);
         WindowXYCoordinate windowXYCoordinate = lonLatCoordinate.convertToWindowXY(mapWindow);
         assertEquals(x, windowXYCoordinate.getX());
         assertEquals(y, windowXYCoordinate.getY());

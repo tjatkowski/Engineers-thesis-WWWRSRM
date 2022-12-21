@@ -38,10 +38,8 @@ public class CarsLayer extends Layer {
     @Override
     public void draw(GraphicsContext gc, double delta) {
         this.currentResolution = resolution.get(mapWindow.getZoomLevel());
-        synchronized(carsManager) {
-            for (Car car : this.carsManager.getCars().values()) {
-                this.drawCar(gc, car, delta);
-            }
+        for (Car car : this.carsManager.getCars().values()) {
+            this.drawCar(gc, car, delta);
         }
     }
 

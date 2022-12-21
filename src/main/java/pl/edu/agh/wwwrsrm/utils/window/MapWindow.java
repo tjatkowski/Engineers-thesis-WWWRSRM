@@ -2,6 +2,7 @@ package pl.edu.agh.wwwrsrm.utils.window;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.ObjectUtils;
 import pl.edu.agh.wwwrsrm.utils.Vec2D;
 import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
@@ -25,13 +26,13 @@ public class MapWindow extends AbstractDistanceCalculator {
     private int zoomLevel;
     private GlobalMapWindow globalMapWindow;
 
-    public MapWindow(LonLatCoordinate topLeftPoint, LonLatCoordinate bottomRightPoint, int windowWidth, int windowHeight) {
+    public MapWindow(LonLatCoordinate topLeftPoint, LonLatCoordinate bottomRightPoint, int windowWidth, int windowHeight, Integer zoomLevel) {
         this.topLeftPoint = topLeftPoint;
         this.bottomRightPoint = bottomRightPoint;
         this.windowWidth = windowWidth;
         this.windowHeight = windowHeight;
-        this.zoomLevel = detectZoomLevel();
-        this.globalMapWindow = new GlobalMapWindow(topLeftPoint.convertToGlobalXY(zoomLevel), bottomRightPoint.convertToGlobalXY(zoomLevel));
+        this.zoomLevel = ObjectUtils.getIfNull(zoomLevel, this::detectZoomLevel);
+        this.globalMapWindow = new GlobalMapWindow(topLeftPoint.convertToGlobalXY(this.zoomLevel), bottomRightPoint.convertToGlobalXY(this.zoomLevel));
     }
 
     /**

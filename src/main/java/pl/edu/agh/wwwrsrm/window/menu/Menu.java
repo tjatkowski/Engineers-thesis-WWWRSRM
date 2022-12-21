@@ -21,13 +21,18 @@ public class Menu extends VBox {
     private final ResumeButton resumeButton;
     private final StopButton stopButton;
     private final EndButton endButton;
+    private final TimeScrollBarLabel timeScrollBarLabel;
     private final TimeScrollBar timeScrollBar;
 
     @PostConstruct
     private void init() {
         this.setPrefWidth(Style.MENU_WIDTH);
         this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-        this.getChildren().addAll(startButton, resumeButton, stopButton, endButton, timeScrollBar);
+        this.getChildren().addAll(startButton, resumeButton, stopButton, endButton, timeScrollBarLabel, timeScrollBar);
+    }
+
+    public void refresh() {
+        timeScrollBarLabel.setOrUpdateVisualizationSpeed();
     }
 
 }
