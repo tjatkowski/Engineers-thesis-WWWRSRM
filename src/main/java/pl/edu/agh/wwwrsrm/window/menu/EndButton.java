@@ -5,6 +5,8 @@ import pl.edu.agh.wwwrsrm.connection.producer.VisualizationStateChangeProducer;
 import pl.edu.agh.wwwrsrm.window.map.Map;
 import proto.model.RUNNING_STATE;
 
+import java.util.Optional;
+
 import static proto.model.RUNNING_STATE.CLOSED;
 
 @Component
@@ -20,7 +22,10 @@ public class EndButton extends MenuButton {
     }
 
     @Override
-    protected RUNNING_STATE getRunningState() {
-        return CLOSED;
+    protected Optional<RUNNING_STATE> getVisualizationStateToSend() {
+        if (CLOSED.equals(visualizationMap.getVisualizationRunningState())) {
+            return Optional.empty();
+        }
+        return Optional.of(CLOSED);
     }
 }

@@ -10,13 +10,15 @@ import proto.model.RUNNING_STATE;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Optional;
+
 import static pl.edu.agh.wwwrsrm.window.Style.MENU_WIDTH;
 
 @RequiredArgsConstructor
 abstract public class MenuButton extends Button {
 
     private final VisualizationStateChangeProducer visualizationStateChangeProducer;
-    private final Map visualizationMap;
+    protected final Map visualizationMap;
 
     @PostConstruct
     protected void init() {
@@ -26,14 +28,14 @@ abstract public class MenuButton extends Button {
     }
 
     protected void onMouseClicked(MouseEvent mouseEvent) {
-        if (!MouseButton.PRIMARY.equals(mouseEvent.getButton())) {
+        if (!MouseButton.PRIMARY.equals(mouseEvent.getButton()) || getVisualizationStateToSend().isEmpty()) {
             return;
         }
-        visualizationMap.setVisualizationRunningState(getRunningState());
+        visualizationMap.setVisualizationRunningState(getVisualizationStateToSend().get());
         visualizationStateChangeProducer.sendStateChangeMessage(visualizationMap);
     }
 
     protected abstract String getButtonName();
 
-    protected abstract RUNNING_STATE getRunningState();
+    protected abstract Optional<RUNNING_STATE> getVisualizationStateToSend();
 }

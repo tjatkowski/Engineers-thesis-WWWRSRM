@@ -4,6 +4,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.control.ScrollBar;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.connection.producer.VisualizationStateChangeProducer;
@@ -11,8 +12,10 @@ import pl.edu.agh.wwwrsrm.window.map.Map;
 
 import javax.annotation.PostConstruct;
 import java.math.RoundingMode;
+import java.util.Optional;
 
 import static pl.edu.agh.wwwrsrm.window.Style.MENU_WIDTH;
+import static proto.model.RUNNING_STATE.STOPPED;
 
 @Slf4j
 @Component
@@ -32,7 +35,7 @@ public class TimeScrollBar extends ScrollBar {
         this.setUnitIncrement(0.2);
         this.setVisibleAmount(1);
         this.valueProperty().addListener((observableValue, oldValue, newValue) -> onBarScrolled(newValue.doubleValue()));
-        visualizationMap.setVisualizationSpeed(1000);
+        visualizationMap.setVisualizationSpeed((int) (this.getValue() * 1000));
     }
 
     public void onBarScrolled(double time) {
@@ -41,10 +44,9 @@ public class TimeScrollBar extends ScrollBar {
                 .intValue();
         log.info("Set visualizationSpeed to {} milliseconds", timeInMilliSeconds);
         visualizationMap.setVisualizationSpeed(timeInMilliSeconds);
-        if (null == visualizationMap.getVisualizationRunningState()) {
-            return;
-        }
-        visualizationStateChangeProducer.sendStateChangeMessage(visualizationMap);
+        Optional.ofNullable(visualizationMap.getVisualizationRunningState()).stream()
+                .filter(runningState -> ObjectUtils.notEqual(STOPPED, runningState))
+                .forEach(runningState -> visualizationStateChangeProducer.sendStateChangeMessage(visualizationMap));
     }
 
 }
