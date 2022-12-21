@@ -30,26 +30,20 @@ public class VisualizationTask implements Runnable {
     }
 
     private void consumeNewNodes() {
-        log.debug("Start consuming new nodes");
         List<Node> nodes = simulationNewNodesConsumer.getNewNodesList();
-        log.info("Consumed {} new nodes", nodes.size());
         map.addNodes(nodes);
         nodes.clear();
     }
 
     private void consumeCars() {
-        log.debug("Start consuming cars");
         LinkedList<Car> cars = consumer.getCars();
-        log.info("Consumed cars size: {}", cars.size());
         if (!cars.isEmpty()) {
             map.clearCars();
         }
         while (!cars.isEmpty()) {
             Car car = cars.poll();
-//                        log.info("Consumed carId : {}", car.getCarId());
             if(car != null)
                 map.updateCar(car);
         }
-        log.info("End consuming cars");
     }
 }

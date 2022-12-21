@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import pl.edu.agh.wwwrsrm.model.Car;
 import proto.model.CarsMessage;
 
-import java.util.Date;
 import java.util.LinkedList;
 
 import static pl.edu.agh.wwwrsrm.connection.config.TopicConfiguration.CARS_TOPIC;
@@ -24,14 +23,11 @@ public class CarsConsumer {
             "specific.protobuf.value.type: proto.model.CarsMessage"
     })
     void carsListener(ConsumerRecords<String, CarsMessage> records) {
-        log.info("Start batch processing");
+        log.info("Start car batch processing");
         for (ConsumerRecord<String, CarsMessage> cr : records) {
-            log.info("Received cars [data:{}, partition:{}, offset:{}]",
-                    cr.value().getClass().getSimpleName(), cr.partition(), cr.offset());
-            var d = new Date(cr.timestamp());
-            log.info(String.valueOf(d));
             CarsMessage carsMessage = cr.value();
-            log.info("IterationNumber={}", carsMessage.getIterationNumber());
+            log.info("Received [cars:{}, iteration: {}, partition:{}, offset:{}]", carsMessage.getCarsMessagesCount(),
+                    carsMessage.getIterationNumber(), cr.partition(), cr.offset());
             carsMessage.getCarsMessagesList().forEach(carMessage -> {
                 Car car = Car.builder()
                         .carId(carMessage.getCarId())
@@ -46,8 +42,7 @@ public class CarsConsumer {
                 this.cars.add(car);
             });
         }
-        log.info("End batch processing");
-        System.out.println("Current cars size : " + this.cars.size());
+        log.info("End car batch processing");
     }
 
 }
