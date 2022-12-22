@@ -6,11 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.events.*;
+import pl.edu.agh.wwwrsrm.graph.GraphOSM;
+import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.utils.CarsManager;
 import pl.edu.agh.wwwrsrm.utils.TrafficDensity;
 import proto.model.CarMessage;
+import proto.model.Node;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -19,6 +25,7 @@ public class AppTaskExecutor {
 
     private final CarsManager carsManager;
     private final TrafficDensity trafficDensity;
+    private final GraphOSM graphOSM;
 
     @EventListener(ApplicationStartedEvent.class)
     public void onApplicationStartedEvent(ApplicationStartedEvent event) {

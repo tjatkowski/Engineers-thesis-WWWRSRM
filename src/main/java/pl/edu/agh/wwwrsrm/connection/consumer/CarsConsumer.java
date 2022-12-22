@@ -23,7 +23,6 @@ public class CarsConsumer {
 
     private final ApplicationContext applicationContext;
 
-    @Getter
     private final LinkedList<CarMessage> carMessages = new LinkedList<>();
     private int currentIterationNumber;
 

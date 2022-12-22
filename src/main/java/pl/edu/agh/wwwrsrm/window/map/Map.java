@@ -24,6 +24,9 @@ import proto.model.VisualizationStateChangeMessage.ZOOM_LEVEL;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 
+import static proto.model.RUNNING_STATE.RESUMED;
+import static proto.model.RUNNING_STATE.STARTED;
+
 @Component
 public class Map extends Canvas {
     @Getter
@@ -86,7 +89,7 @@ public class Map extends Canvas {
             mapView = createMapView();
             isMapResized = false;
         }
-        if (isRoiRegionChanged && null != visualizationRunningState) {
+        if (isRoiRegionChanged && (STARTED.equals(visualizationRunningState) | RESUMED.equals(visualizationRunningState))) {
             visualizationStateChangeProducer.sendStateChangeMessage(this);
             isRoiRegionChanged = false;
         }

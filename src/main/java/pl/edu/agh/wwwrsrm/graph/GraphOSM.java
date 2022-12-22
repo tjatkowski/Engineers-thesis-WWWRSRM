@@ -16,11 +16,6 @@ public class GraphOSM {
     private final Map<Long, WayOSM> ways;
     private final Map<NodeIdPairKey, Long> nodePairToWayMap;
 
-    //TODO remove
-    public void addNode(NodeOSM node) {
-        this.nodes.put(node.getId(), node);
-    }
-
     /**
      * @return road graph max Latitude coordinate
      */
