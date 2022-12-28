@@ -3,10 +3,12 @@ package pl.edu.agh.wwwrsrm.osm;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import crosby.binary.osmosis.OsmosisReader;
+import lombok.extern.slf4j.Slf4j;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
+import pl.edu.agh.wwwrsrm.exceptions.MapFilePathException;
 import pl.edu.agh.wwwrsrm.graph.*;
 import pl.edu.agh.wwwrsrm.utils.coordinates.LonLatCoordinate;
 
@@ -24,6 +26,7 @@ import java.util.Map;
  * OsmParser class parses nodes and ways read by OsmReader and creates road graph.
  * Only ways with 'highway' key parameter and values indicating possibility of car driving on them are considered.
  */
+@Slf4j
 public class OsmParser {
 
     /**
@@ -33,19 +36,18 @@ public class OsmParser {
      * @return road graph
      */
     @SuppressWarnings({"UnstableApiUsage"})
-    public static GraphOSM CreateGraph(String path, String parametersPath) {
+    public static GraphOSM CreateGraph(String path, String parametersPath) throws MapFilePathException {
         FileInputStream inputStream = null;
         Map<String, WayParameters> roadZooms = null;
         try {
-            System.out.println(path);
             inputStream = new FileInputStream(path);
             String parametersJson = new String(Files.readAllBytes(Paths.get(parametersPath)));
             Type mapType = new TypeToken<Map<String, WayParameters>>() {
             }.getType();
             roadZooms = new Gson().fromJson(parametersJson, mapType);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-            System.exit(1);
+            log.error(e.getMessage());
+            throw new MapFilePathException(e.getMessage());
         }
 
         OsmReader myOsmReader = new OsmReader();
