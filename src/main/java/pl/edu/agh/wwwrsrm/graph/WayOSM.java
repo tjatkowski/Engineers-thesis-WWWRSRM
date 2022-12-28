@@ -10,9 +10,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WayOSM {
 
-    private final Long wayId;
+    private final String wayId;
     private final List<EdgeOSM> edges;
-    private final WayParameters edgeParameter;
+    private final WayParameters wayParameters;
     private final boolean isClosed;
 
 }

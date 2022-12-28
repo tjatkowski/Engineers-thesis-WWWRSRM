@@ -34,14 +34,13 @@ public class RoadsLayer extends DrawerLayer {
     @Override
     public void draw(GraphicsContext gc, double delta) {
         for (WayOSM way : osm_graph.getWays().values()) {
-            WayParameters wayParameters = way.getEdgeParameter();
-            int wayMinZoomLevel = wayParameters.getZoomLevel();
-
+            WayParameters wayParameters = way.getWayParameters();
             double wayWidth = (double) wayParameters.getWayWidth() / resolution.get(mapWindow.getZoomLevel());
             Color wayColor = wayParameters.getColor();
 
-            if (wayWidth < 1.0)
-                return;
+            if (wayWidth < 1.0) {
+                continue;
+            }
 
             if (!way.isClosed() && !wayParameters.getType().equals("waterway"))
                 drawWay(way, gc, delta, wayWidth, wayColor);
@@ -58,9 +57,6 @@ public class RoadsLayer extends DrawerLayer {
             NodeOSM startNode = edge.getStartNode();
             NodeOSM endNode = edge.getEndNode();
             if (mapWindow.isInsideWindow(startNode.getCoordinate()) || mapWindow.isInsideWindow(endNode.getCoordinate())) {
-                long id1 = java.lang.Math.min(startNode.getId(), endNode.getId());
-                long id2 = java.lang.Math.max(startNode.getId(), endNode.getId());
-
                 WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
                 WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
                 // drawing in canvas

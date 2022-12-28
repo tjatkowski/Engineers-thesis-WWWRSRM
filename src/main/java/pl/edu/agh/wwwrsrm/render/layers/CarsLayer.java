@@ -11,6 +11,7 @@ import pl.edu.agh.wwwrsrm.utils.CarsManager;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CarsLayer extends Layer {
@@ -66,8 +67,8 @@ public class CarsLayer extends Layer {
      * @param y node y coordinate
      */
     public void drawNode(GraphicsContext gc, double x, double y, double r, double l, Color color) {
-        double length = (3.0*l) / currentResolution;
-        double width = 5.0 / currentResolution;
+        double length = (1*l) / currentResolution;
+        double width = 2 / currentResolution;
         x -= length / 2.0;
         y -= width / 2.0;
 

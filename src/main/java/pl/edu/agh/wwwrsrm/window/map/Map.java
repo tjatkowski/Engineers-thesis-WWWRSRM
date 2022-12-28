@@ -10,7 +10,6 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.connection.producer.VisualizationStateChangeProducer;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.utils.CarsManager;
 import pl.edu.agh.wwwrsrm.utils.TrafficDensity;
 import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
@@ -22,7 +21,6 @@ import proto.model.RUNNING_STATE;
 import proto.model.VisualizationStateChangeMessage.ZOOM_LEVEL;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 
 import static proto.model.RUNNING_STATE.RESUMED;
 import static proto.model.RUNNING_STATE.STARTED;
@@ -37,8 +35,6 @@ public class Map extends Canvas {
     private final TrafficDensity trafficDensity;
 
     private final CarsManager carsManager;
-
-    private final java.util.Map<String, Car> cars = new HashMap<>();
 
     private boolean isMapResized;
     private boolean isRoiRegionChanged;
@@ -89,7 +85,7 @@ public class Map extends Canvas {
             mapView = createMapView();
             isMapResized = false;
         }
-        if (isRoiRegionChanged && (STARTED.equals(visualizationRunningState) | RESUMED.equals(visualizationRunningState))) {
+        if (isRoiRegionChanged && (STARTED.equals(visualizationRunningState) || RESUMED.equals(visualizationRunningState))) {
             visualizationStateChangeProducer.sendStateChangeMessage(this);
             isRoiRegionChanged = false;
         }

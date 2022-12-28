@@ -12,10 +12,7 @@ import pl.edu.agh.wwwrsrm.utils.TrafficDensity;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DensityRoadsLayer extends DrawerLayer {
 
@@ -37,36 +34,18 @@ public class DensityRoadsLayer extends DrawerLayer {
 
     @Override
     public void draw(GraphicsContext gc, double delta) {
-        osm_graph.getWays().values().stream().sorted((w1, w2) -> {
-            Road r1 = trafficDensity.getRoad(w1.getWayId());
-            if (r1 == null)
-                return -1;
-            Road r2 = trafficDensity.getRoad(w2.getWayId());
-            if (r2 == null)
-                return 1;
-
-            int d1 = r1.getDensity();
-            int d2 = r2.getDensity();
-            return Integer.compare(d1, d2);
-        }).forEach(way -> {
-            WayParameters wayParameters = way.getEdgeParameter();
-            int wayMinZoomLevel = wayParameters.getZoomLevel();
-
-            double wayWidth = (double) wayParameters.getWayWidth() / resolution.get(mapWindow.getZoomLevel());
-            Color wayColor = wayParameters.getColor();
-
-            if (wayWidth < 1.0)
-                return;
-
-            int density = 0;
-            Road road = trafficDensity.getRoad(way.getWayId());
-            if (road != null)
-                density = road.getDensity();
-            if (!way.isClosed() && !wayParameters.getType().equals("waterway")) {
-                drawWay(way, gc, delta, wayWidth, new Color(1.0, Math.max(0.0, 1.0 - 0.2 * density), Math.max(0.0, 1.0 - 0.2 * density), 1.0));
-
-            }
-        });
+        trafficDensity.getRoads().values().stream()
+                .sorted(Comparator.comparingInt(Road::getDensity))
+                .forEach(road -> {
+                    WayOSM wayOSM = osm_graph.getWays().get(road.getWayId());
+                    WayParameters wayParameters = wayOSM.getWayParameters();
+                    double wayWidth = (double) wayParameters.getWayWidth() / resolution.get(mapWindow.getZoomLevel());
+                    if (wayWidth < 1.0 || wayOSM.isClosed() || wayParameters.getType().equals("waterway")) {
+                        return;
+                    }
+                    int density = road.getDensity();
+                    drawWay(wayOSM, gc, delta, wayWidth, new Color(1.0, Math.max(0.0, 1.0 - 0.2 * density), Math.max(0.0, 1.0 - 0.2 * density), 1.0));
+                });
     }
 
     void drawWay(WayOSM way, GraphicsContext gc, double delta, double width, Color color) {
@@ -79,9 +58,6 @@ public class DensityRoadsLayer extends DrawerLayer {
             NodeOSM startNode = edge.getStartNode();
             NodeOSM endNode = edge.getEndNode();
             if (mapWindow.isInsideWindow(startNode.getCoordinate()) || mapWindow.isInsideWindow(endNode.getCoordinate())) {
-                long id1 = java.lang.Math.min(startNode.getId(), endNode.getId());
-                long id2 = java.lang.Math.max(startNode.getId(), endNode.getId());
-
                 WindowXYCoordinate startNodeWindowXY = startNode.getCoordinate().convertToWindowXY(mapWindow);
                 WindowXYCoordinate endNodeWindowXY = endNode.getCoordinate().convertToWindowXY(mapWindow);
                 // drawing in canvas

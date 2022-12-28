@@ -17,13 +17,12 @@ import static pl.edu.agh.wwwrsrm.utils.Interpolation.lerp;
 @Getter
 @Setter
 @Builder
-//@RequiredArgsConstructor
 public class Car {
 
     private static WindowXYCoordinate getXYCoordinate(String node, GraphOSM osm_graph, MapWindow mapWindow) {
         if (!NumberUtils.isCreatable(node))
             return null;
-        NodeOSM nodeOSM = osm_graph.getNodes().get(Long.parseLong(node));
+        NodeOSM nodeOSM = osm_graph.getNodes().get(node);
         if (nodeOSM == null)
             return null;
         return nodeOSM.getCoordinate().convertToWindowXY(mapWindow);
@@ -105,7 +104,6 @@ public class Car {
     }
 
     private boolean toDelete = false;
-
     private double multiplier = 1.71;
 
     public boolean isToDelete() {

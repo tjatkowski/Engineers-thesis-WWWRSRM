@@ -8,11 +8,10 @@ spring:
       properties:
         buffer.memory: 33_554_432 # 32MiB
         batch.size: 1_048_576 # 1MiB
-        linger.ms: 10 # 10ms
 
     consumer:
       group-id: cars_group, simulation_state_change_group
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       enable-auto-commit: true
       auto-commit-interval: 5
       key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer

@@ -56,9 +56,9 @@ public class OsmParser {
         Map<Long, Node> allNodes = myOsmReader.getNodes();
         Map<Long, Way> allWays = myOsmReader.getWays();
 
-        Map<Long, NodeOSM> nodes = new HashMap<>();
-        Map<Long, WayOSM> ways = new HashMap<>();
-        Map<NodeIdPairKey, Long> nodeIdPairToWayIdMap = new HashMap<>();
+        Map<String, NodeOSM> nodes = new HashMap<>();
+        Map<String, WayOSM> ways = new HashMap<>();
+        Map<NodeIdPairKey, String> nodeIdPairToWayIdMap = new HashMap<>();
 
         for (Way way : allWays.values()) {
             if (way.getWayNodes().size() < 2) {
@@ -76,7 +76,7 @@ public class OsmParser {
                 continue;
             }
 
-            long wayId = way.getId();
+            String wayId = Long.toString(way.getId());
             List<EdgeOSM> edges = new LinkedList<>();
             way.getWayNodes().stream().map(WayNode::getNodeId).map(allNodes::get)
                     .map(node -> new NodeOSM(node.getId(), new LonLatCoordinate(node.getLongitude(), node.getLatitude())))

@@ -1,49 +1,48 @@
 package pl.edu.agh.wwwrsrm.utils;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeIdPairKey;
+import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Road;
 import proto.model.CarMessage;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class TrafficDensity {
 
-    private final HashMap<Long, Road> roads = new HashMap<>();
+    @Getter
+    private final Map<String, Road> roads;
 
     private final GraphOSM osm_graph;
 
     public TrafficDensity(GraphOSM osm_graph) {
         this.osm_graph = osm_graph;
-    }
-
-    public Road getRoad(long wayId) {
-        return roads.get(wayId);
+        this.roads = osm_graph.getWays().values().stream()
+                .map(WayOSM::getWayId)
+                .collect(Collectors.toMap(Function.identity(), Road::new));
     }
 
     public void nextBatch() {
-        roads.clear();
+        roads.values().forEach(Road::clearDensity);
     }
 
     public void processCarMessage(CarMessage carMessage) {
-        long startNode = Long.parseLong(carMessage.getNode1Id());
-        long endNode = Long.parseLong(carMessage.getNode2Id());
+        String startNode = carMessage.getNode1Id();
+        String endNode = carMessage.getNode2Id();
 
-        Long wayId = osm_graph.getNodePairToWayMap().get(new NodeIdPairKey(startNode, endNode));
+        String wayId = osm_graph.getNodePairToWayMap().get(new NodeIdPairKey(startNode, endNode));
         if(wayId == null)
             wayId = osm_graph.getNodePairToWayMap().get(new NodeIdPairKey(endNode, startNode));
         if(wayId == null)
             return;
         Road road = roads.get(wayId);
         if (road == null) {
-            roads.put(wayId, Road.builder()
-                    .density(1)
-                    .node1Id(startNode)
-                    .node2Id(endNode)
-                    .wayId(wayId)
-                    .build());
+            roads.put(wayId, new Road(wayId));
         } else {
             road.increaseDensity();
         }

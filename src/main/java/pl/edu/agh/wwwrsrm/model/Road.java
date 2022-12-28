@@ -1,30 +1,30 @@
 package pl.edu.agh.wwwrsrm.model;
 
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import pl.edu.agh.wwwrsrm.graph.WayOSM;
 
 @Getter
-@Setter
-@Builder
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class Road {
-    int density;
-    long node1Id;
-    long node2Id;
-    long wayId;
+
+    private final String wayId;
+
+    private int density = 0;
+
+    public Road(WayOSM wayOSM) {
+        this.wayId = wayOSM.getWayId();
+    }
 
     public void increaseDensity() {
         density++;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-
-        if (!(o instanceof Road road))
-            return false;
-
-        return node1Id == road.node1Id && node2Id == road.node2Id;
+    public void clearDensity() {
+        density = 0;
     }
+
 }
