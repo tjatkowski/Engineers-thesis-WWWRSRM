@@ -10,16 +10,21 @@ import proto.model.Node;
  */
 @Getter
 public class NodeOSM {
-    private final long id;
+    private final String id;
     private final LonLatCoordinate coordinate;
 
     public NodeOSM(long id, LonLatCoordinate coordinate) {
+        this.id = Long.toString(id);
+        this.coordinate = coordinate;
+    }
+
+    public NodeOSM(String id, LonLatCoordinate coordinate) {
         this.id = id;
         this.coordinate = coordinate;
     }
 
     public NodeOSM(Node node) {
-        this.id = Long.parseLong(node.getNodeId());
+        this.id = node.getNodeId();
         Coordinates coords = node.getCoordinates();
         this.coordinate = new LonLatCoordinate(coords.getLongitude(), coords.getLatitude());
     }

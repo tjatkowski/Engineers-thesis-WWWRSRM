@@ -7,9 +7,11 @@ import javafx.util.Pair;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.model.Car;
 import pl.edu.agh.wwwrsrm.render.Layer;
+import pl.edu.agh.wwwrsrm.utils.CarsManager;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CarsLayer extends Layer {
@@ -17,17 +19,17 @@ public class CarsLayer extends Layer {
     private final GraphOSM osm_graph;
     private final MapWindow mapWindow;
 
-    private final Map<String, Car> cars;
+    private final CarsManager carsManager;
 
     private final Map<Integer, Double> resolution = new HashMap<>();
 
     private double currentResolution = 1.0;
 
-    public CarsLayer(double width, double height, GraphOSM osm_graph, MapWindow mapWindow, Map<String, Car> cars) {
+    public CarsLayer(double width, double height, GraphOSM osm_graph, MapWindow mapWindow, CarsManager carsManager) {
         super(width, height);
         this.mapWindow = mapWindow;
         this.osm_graph = osm_graph;
-        this.cars = cars;
+        this.carsManager = carsManager;
         for(int i = MapWindow.MIN_ZOOM_LEVEL; i <= MapWindow.MAX_ZOOM_LEVEL; i++) {
             double r = mapWindow.groundResolution((osm_graph.getBottomBound() + osm_graph.getTopBound())/2.0, i);
             resolution.put(i, r);
@@ -37,10 +39,9 @@ public class CarsLayer extends Layer {
     @Override
     public void draw(GraphicsContext gc, double delta) {
         this.currentResolution = resolution.get(mapWindow.getZoomLevel());
-        for (Car car : this.cars.values()) {
+        for (Car car : this.carsManager.getCars().values()) {
             this.drawCar(gc, car, delta);
         }
-
     }
 
     /**
@@ -56,7 +57,7 @@ public class CarsLayer extends Layer {
         Point2D position = positionRotation.getKey();
         double rotation = positionRotation.getValue();
 
-        this.drawNode(gc, position.getX(), position.getY(), rotation, car.getLength(), Color.RED);
+        this.drawNode(gc, position.getX(), position.getY(), rotation, car.getLength(), Color.BLACK);
     }
 
     /**
@@ -66,13 +67,13 @@ public class CarsLayer extends Layer {
      * @param y node y coordinate
      */
     public void drawNode(GraphicsContext gc, double x, double y, double r, double l, Color color) {
-        double length = (3.0*l) / currentResolution;
-        double width = 5.0 / currentResolution;
+        double length = (1*l) / currentResolution;
+        double width = 2 / currentResolution;
         x -= length / 2.0;
         y -= width / 2.0;
 
-        x -= Math.cos((r+90)*3.14/180.0)*3.0/ currentResolution;
-        y -= Math.sin((r+90)*3.14/180.0)*3.0/ currentResolution;
+        x += Math.cos((r+90)*3.14/180.0)*3.0/ currentResolution;
+        y += Math.sin((r+90)*3.14/180.0)*3.0/ currentResolution;
 
 
         gc.save();

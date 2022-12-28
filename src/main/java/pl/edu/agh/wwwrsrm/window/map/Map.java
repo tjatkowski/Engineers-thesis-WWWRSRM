@@ -10,22 +10,20 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 import pl.edu.agh.wwwrsrm.connection.producer.VisualizationStateChangeProducer;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.graph.NodeOSM;
-import pl.edu.agh.wwwrsrm.model.Car;
+import pl.edu.agh.wwwrsrm.utils.CarsManager;
+import pl.edu.agh.wwwrsrm.utils.TrafficDensity;
 import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.window.MapView;
 import pl.edu.agh.wwwrsrm.visualization.MapDraggingHandler;
 import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
 import pl.edu.agh.wwwrsrm.window.Style;
-import proto.model.Node;
 import proto.model.RUNNING_STATE;
 import proto.model.VisualizationStateChangeMessage.ZOOM_LEVEL;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
+
+import static proto.model.RUNNING_STATE.RESUMED;
+import static proto.model.RUNNING_STATE.STARTED;
 
 @Component
 public class Map extends Canvas {
@@ -34,7 +32,9 @@ public class Map extends Canvas {
 
     private final GraphOSM graphOSM;
 
-    private final java.util.Map<String, Car> cars = new HashMap<>();
+    private final TrafficDensity trafficDensity;
+
+    private final CarsManager carsManager;
 
     private boolean isMapResized;
     private boolean isRoiRegionChanged;
@@ -51,11 +51,13 @@ public class Map extends Canvas {
     @Setter
     private ZOOM_LEVEL zoomLevel;
 
-    public Map(GraphOSM graphOSM, VisualizationStateChangeProducer visualizationStateChangeProducer) {
+    public Map(GraphOSM graphOSM, CarsManager carsManager, TrafficDensity trafficDensity, VisualizationStateChangeProducer visualizationStateChangeProducer) {
         super(Style.WINDOW_WIDTH - Style.MENU_WIDTH, Style.WINDOW_HEIGHT);
         this.graphOSM = graphOSM;
+        this.carsManager = carsManager;
+        this.trafficDensity = trafficDensity;
         this.visualizationStateChangeProducer = visualizationStateChangeProducer;
-        this.mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight(), null);
+        this.mapView = createMapView();
     }
 
     @PostConstruct
@@ -66,34 +68,13 @@ public class Map extends Canvas {
         this.setEventHandler(ScrollEvent.ANY, new MapZoomHandler(this));
     }
 
+    private MapView createMapView() {
+        return new MapView(this.carsManager, this.trafficDensity, this.graphOSM, (int) getWidth(), (int) getHeight(), mapView);
+    }
+
     @Override
     public boolean isResizable() {
         return true;
-    }
-
-    public void clearCars() {
-        for (Iterator<Entry<String, Car>> it = cars.entrySet().iterator(); it.hasNext(); ) {
-            Entry<String, Car> entry = it.next();
-            if (entry.getValue().isToDelete()) {
-                it.remove();
-            } else {
-                entry.getValue().setToDelete();
-            }
-        }
-    }
-
-    //TODO remove, it's not Map functionality
-    public void addNodes(List<Node> nodes) {
-        for (Node node : nodes)
-            graphOSM.addNode(new NodeOSM(node));
-    }
-
-    public void updateCar(Car car) {
-        Car carToUpdate = cars.get(car.getCarId());
-        if (carToUpdate != null)
-            carToUpdate.update(car);
-        else
-            cars.put(car.getCarId(), car);
     }
 
     public void draw(double delta) {
@@ -101,10 +82,10 @@ public class Map extends Canvas {
         gc.setFill(Color.LIGHTGRAY);
         gc.fillRect(0, 0, getWidth(), getHeight());
         if (isMapResized) {
-            mapView = new MapView(graphOSM, cars, (int) getWidth(), (int) getHeight(), mapView);
+            mapView = createMapView();
             isMapResized = false;
         }
-        if (isRoiRegionChanged && null != visualizationRunningState) {
+        if (isRoiRegionChanged && (STARTED.equals(visualizationRunningState) || RESUMED.equals(visualizationRunningState))) {
             visualizationStateChangeProducer.sendStateChangeMessage(this);
             isRoiRegionChanged = false;
         }

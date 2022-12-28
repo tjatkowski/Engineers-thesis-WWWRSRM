@@ -12,14 +12,9 @@ import java.util.*;
 @Getter
 @AllArgsConstructor
 public class GraphOSM {
-    private final Map<Long, NodeOSM> nodes;
-    private final Map<Long, WayOSM> ways;
-    private final Map<NodeIdPairKey, Long> nodePairToWayMap;
-
-    //TODO remove
-    public void addNode(NodeOSM node) {
-        this.nodes.put(node.getId(), node);
-    }
+    private final Map<String, NodeOSM> nodes;
+    private final Map<String, WayOSM> ways;
+    private final Map<NodeIdPairKey, String> nodePairToWayMap;
 
     /**
      * @return road graph max Latitude coordinate

@@ -8,7 +8,7 @@ import pl.edu.agh.wwwrsrm.utils.Vec2D;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 public class GlobalXYCoordinate extends AbstractCoordinateConverter {
 

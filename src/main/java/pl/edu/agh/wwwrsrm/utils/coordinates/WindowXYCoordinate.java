@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 public class WindowXYCoordinate extends AbstractCoordinateConverter {
 

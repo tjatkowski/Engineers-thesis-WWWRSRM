@@ -8,7 +8,7 @@ import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 public class LonLatCoordinate extends AbstractCoordinateConverter {
 
