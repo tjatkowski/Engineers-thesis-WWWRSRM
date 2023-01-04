@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.edu.agh.wwwrsrm.window.Style;
+import pl.edu.agh.wwwrsrm.window.constants.Style;
 
 import javax.annotation.PostConstruct;
 
@@ -32,7 +32,7 @@ public class Menu extends VBox {
     }
 
     public void refresh() {
-        timeScrollBarLabel.setOrUpdateVisualizationSpeed();
+        timeScrollBarLabel.setOrUpdateTimeMultiplier();
     }
 
 }

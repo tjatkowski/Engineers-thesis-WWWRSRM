@@ -16,7 +16,7 @@ import pl.edu.agh.wwwrsrm.utils.constants.Zoom;
 import pl.edu.agh.wwwrsrm.utils.window.MapView;
 import pl.edu.agh.wwwrsrm.visualization.MapDraggingHandler;
 import pl.edu.agh.wwwrsrm.visualization.MapZoomHandler;
-import pl.edu.agh.wwwrsrm.window.Style;
+import pl.edu.agh.wwwrsrm.window.constants.Style;
 import proto.model.RUNNING_STATE;
 import proto.model.VisualizationStateChangeMessage.ZOOM_LEVEL;
 
@@ -46,7 +46,7 @@ public class Map extends Canvas {
     private RUNNING_STATE visualizationRunningState;
     @Getter
     @Setter
-    private int visualizationSpeed;
+    private double timeMultiplier;
     @Getter
     @Setter
     private ZOOM_LEVEL zoomLevel;

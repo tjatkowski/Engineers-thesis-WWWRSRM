@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import pl.edu.agh.wwwrsrm.Visualization;
 
-import static pl.edu.agh.wwwrsrm.window.Style.*;
+import static pl.edu.agh.wwwrsrm.window.constants.Style.*;
 
 public class StartWindow extends BorderPane {
 

@@ -31,7 +31,7 @@ public class VisualizationStateChangeProducer {
                 .setStateChange(Optional.ofNullable(visualizationMap.getVisualizationRunningState()).orElse(STARTED))
                 .setZoomLevel(Optional.ofNullable(visualizationMap.getZoomLevel()).orElse(CARS))
                 .setRoiRegion(Optional.ofNullable(visualizationMap.getMapView().getRoiRegion()).orElseGet(ROIRegion::getDefaultInstance))
-                .setVisualizationSpeed(visualizationMap.getVisualizationSpeed())
+                .setTimeMultiplier(visualizationMap.getTimeMultiplier())
                 .build();
     }
 
@@ -43,9 +43,9 @@ public class VisualizationStateChangeProducer {
         future.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onSuccess(SendResult<String, VisualizationStateChangeMessage> result) {
-                log.info("VisualizationStateChangeMessage send: stateChange={}, ROIRegion={}, ZoomLevel={}, VisualizationSpeed={}",
+                log.info("VisualizationStateChangeMessage send: stateChange={}, ROIRegion={}, ZoomLevel={}, TimeMultiplier={}",
                         visualizationStateChangeMessage.getStateChange(), visualizationStateChangeMessage.getRoiRegion(),
-                        visualizationStateChangeMessage.getZoomLevel(), visualizationStateChangeMessage.getVisualizationSpeed());
+                        visualizationStateChangeMessage.getZoomLevel(), visualizationStateChangeMessage.getTimeMultiplier());
             }
 
             @Override

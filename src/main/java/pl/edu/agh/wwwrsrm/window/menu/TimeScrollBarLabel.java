@@ -7,7 +7,7 @@ import pl.edu.agh.wwwrsrm.window.map.Map;
 
 import javax.annotation.PostConstruct;
 
-import static pl.edu.agh.wwwrsrm.window.Style.MENU_WIDTH;
+import static pl.edu.agh.wwwrsrm.window.constants.Style.MENU_WIDTH;
 
 @Component
 @RequiredArgsConstructor
@@ -17,12 +17,12 @@ public class TimeScrollBarLabel extends Label {
 
     @PostConstruct
     public void init() {
-        setOrUpdateVisualizationSpeed();
+        setOrUpdateTimeMultiplier();
         this.setPrefWidth(MENU_WIDTH);
     }
 
-    public void setOrUpdateVisualizationSpeed() {
-        this.setText("Step time: " + visualizationMap.getVisualizationSpeed());
+    public void setOrUpdateTimeMultiplier() {
+        this.setText("Time multiplier: " + visualizationMap.getTimeMultiplier());
     }
 
 }

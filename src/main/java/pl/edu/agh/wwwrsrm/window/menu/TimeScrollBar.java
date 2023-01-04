@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 import java.math.RoundingMode;
 import java.util.Optional;
 
-import static pl.edu.agh.wwwrsrm.window.Style.MENU_WIDTH;
+import static pl.edu.agh.wwwrsrm.window.constants.Style.MENU_WIDTH;
 import static proto.model.RUNNING_STATE.STOPPED;
 
 @Slf4j
@@ -29,24 +29,22 @@ public class TimeScrollBar extends ScrollBar {
     public void init() {
         this.setPrefWidth(MENU_WIDTH);
         this.setOrientation(Orientation.HORIZONTAL);
-        this.setMin(0);
-        this.setMax(2);
-        this.setValue(1);
-        this.setUnitIncrement(0.2);
-        this.setVisibleAmount(1);
+        this.setMin(0.1);
+        this.setMax(2.0);
+        this.setValue(1.0);
+        this.setUnitIncrement(0.5);
+        this.setVisibleAmount(1.0);
         this.valueProperty().addListener((observableValue, oldValue, newValue) -> onBarScrolled(newValue.doubleValue()));
-        visualizationMap.setVisualizationSpeed((int) (this.getValue() * 1000));
+        visualizationMap.setTimeMultiplier((int) (this.getValue()));
     }
 
-    public void onBarScrolled(double time) {
-        int timeInMilliSeconds = NumberUtils.toScaledBigDecimal(time, 3, RoundingMode.DOWN)
-                .movePointRight(3)
-                .intValue();
-        log.info("Set visualizationSpeed to {} milliseconds", timeInMilliSeconds);
-        visualizationMap.setVisualizationSpeed(timeInMilliSeconds);
-        Optional.ofNullable(visualizationMap.getVisualizationRunningState()).stream()
+    public void onBarScrolled(double value) {
+        double realTimeMultiplier = NumberUtils.toScaledBigDecimal(value, 1, RoundingMode.HALF_EVEN).doubleValue();
+        log.info("Set real value multiplier to {}", realTimeMultiplier);
+        visualizationMap.setTimeMultiplier(realTimeMultiplier);
+        Optional.ofNullable(visualizationMap.getVisualizationRunningState())
                 .filter(runningState -> ObjectUtils.notEqual(STOPPED, runningState))
-                .forEach(runningState -> visualizationStateChangeProducer.sendStateChangeMessage(visualizationMap));
+                .ifPresent(runningState -> visualizationStateChangeProducer.sendStateChangeMessage(visualizationMap));
     }
 
 }

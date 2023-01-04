@@ -3,8 +3,8 @@ package pl.edu.agh.wwwrsrm.window.start;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
-import static pl.edu.agh.wwwrsrm.window.Style.WINDOW_HEIGHT;
-import static pl.edu.agh.wwwrsrm.window.Style.WINDOW_WIDTH;
+import static pl.edu.agh.wwwrsrm.window.constants.Style.WINDOW_HEIGHT;
+import static pl.edu.agh.wwwrsrm.window.constants.Style.WINDOW_WIDTH;
 
 public class LoadingWindow extends BorderPane {
 

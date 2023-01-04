@@ -12,7 +12,7 @@ import org.springframework.boot.context.event.ApplicationFailedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.Lifecycle;
-import pl.edu.agh.wwwrsrm.window.Window;
+import pl.edu.agh.wwwrsrm.window.map.Window;
 import pl.edu.agh.wwwrsrm.window.start.LoadingWindow;
 import pl.edu.agh.wwwrsrm.window.start.StartWindow;
 
@@ -27,7 +27,6 @@ public class Visualization extends Application {
     private String mapFilePath;
 
     @Override
-    @SneakyThrows
     public void start(Stage stage) {
         this.stage = stage;
         this.stage.setTitle("WWWRSRM - Traffic Visualization");
@@ -41,10 +40,12 @@ public class Visualization extends Application {
         stage.show();
     }
 
+    @SneakyThrows
     public void setLoadingWindow() {
         LoadingWindow loadingWindow = new LoadingWindow();
         stage.setScene(new Scene(loadingWindow));
         stage.show();
+        Thread.sleep(50);
         Platform.runLater(this::loadWindow);
     }
 

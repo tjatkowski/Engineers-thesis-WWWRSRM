@@ -1,4 +1,4 @@
-package pl.edu.agh.wwwrsrm.window;
+package pl.edu.agh.wwwrsrm.window.constants;
 
 public class Style {
     public static double WINDOW_WIDTH = 1920;
@@ -6,8 +6,5 @@ public class Style {
     public static double START_WINDOW_WIDTH = 480;
     public static double START_WINDOW_HEIGHT = 320;
     public static double SUBMIT_BUTTON_WIDTH = 120;
-
-    public static double MENU_WIDTH = 100;
-
-    public static double MAX_FPS = 25;
+    public static double MENU_WIDTH = 125;
 }

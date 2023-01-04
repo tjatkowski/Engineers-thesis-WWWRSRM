@@ -9,10 +9,9 @@ import pl.edu.agh.wwwrsrm.window.map.Map;
 import proto.model.RUNNING_STATE;
 
 import javax.annotation.PostConstruct;
-
 import java.util.Optional;
 
-import static pl.edu.agh.wwwrsrm.window.Style.MENU_WIDTH;
+import static pl.edu.agh.wwwrsrm.window.constants.Style.MENU_WIDTH;
 
 @RequiredArgsConstructor
 abstract public class MenuButton extends Button {

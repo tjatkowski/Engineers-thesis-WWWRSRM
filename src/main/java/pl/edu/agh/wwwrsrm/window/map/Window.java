@@ -1,12 +1,11 @@
-package pl.edu.agh.wwwrsrm.window;
+package pl.edu.agh.wwwrsrm.window.map;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import org.springframework.stereotype.Component;
-import pl.edu.agh.wwwrsrm.window.map.Map;
 import pl.edu.agh.wwwrsrm.window.menu.Menu;
 
-import static pl.edu.agh.wwwrsrm.window.Style.*;
+import static pl.edu.agh.wwwrsrm.window.constants.Style.*;
 
 @Component
 public class Window {
