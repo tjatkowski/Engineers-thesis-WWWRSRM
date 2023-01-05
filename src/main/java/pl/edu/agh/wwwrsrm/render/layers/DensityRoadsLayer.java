@@ -44,7 +44,11 @@ public class DensityRoadsLayer extends DrawerLayer {
                         return;
                     }
                     int density = road.getDensity();
-                    drawWay(wayOSM, gc, delta, wayWidth, new Color(1.0, Math.max(0.0, 1.0 - 0.2 * density), Math.max(0.0, 1.0 - 0.2 * density), 1.0));
+                    drawWay(wayOSM, gc, delta, wayWidth, new Color(
+                            1.0,
+                            Math.max(0.0, 1.0 - (1.0/25.0) * density),
+                            Math.max(0.0, 1.0 - (1.0/25.0) * density),
+                            1.0));
                 });
     }
 
