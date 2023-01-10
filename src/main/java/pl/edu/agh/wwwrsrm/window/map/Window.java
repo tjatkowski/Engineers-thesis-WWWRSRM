@@ -13,7 +13,6 @@ public class Window {
 
     public Window(Menu menu, Map map) {
         BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
         borderPane.setCenter(map);
         map.widthProperty().bind(borderPane.widthProperty().subtract(MENU_WIDTH));

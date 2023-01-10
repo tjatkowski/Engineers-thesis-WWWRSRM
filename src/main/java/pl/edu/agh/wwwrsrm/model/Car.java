@@ -19,8 +19,6 @@ import static pl.edu.agh.wwwrsrm.utils.Interpolation.lerp;
 public class Car {
 
     private static WindowXYCoordinate getXYCoordinate(String node, GraphOSM osm_graph, MapWindow mapWindow) {
-//        if (!NumberUtils.isCreatable(node))
-//            return null;
         NodeOSM nodeOSM = osm_graph.getNodes().get(node);
         if (nodeOSM == null)
             return null;
