@@ -62,6 +62,12 @@ public class CarsLayer extends Layer {
         int r = (argb>>16)&0xFF;
         int a = (argb>>24)&0xFF;
 
+        if (r+g+b > 230*3) {
+            r /= 2;
+            g /= 2;
+            b /= 2;
+        }
+
         this.drawNode(gc, position.getX(), position.getY(), rotation, car.getLength(), new Color((float)r/255.0, (float)g/255.0, (float)b/255.0, 1.0));
     }
 
