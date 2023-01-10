@@ -100,7 +100,7 @@ public class Car {
     private double progress = 0;
 
     public double getProgress() {
-        return Math.min(progress, 1.0);
+        return Math.max(0.0, Math.min(progress, 1.0));
     }
 
     private boolean toDelete = false;
@@ -121,6 +121,9 @@ public class Car {
     private void adjustMultiplier() {
         double offset = 1.0 - this.progress;
         multiplier += offset / 3.0;
+
+        if(multiplier < 0)
+            multiplier = 0.1;
     }
 
     public void update(CarMessage car) {

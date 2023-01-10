@@ -11,7 +11,6 @@ import pl.edu.agh.wwwrsrm.utils.CarsManager;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CarsLayer extends Layer {
@@ -57,7 +56,13 @@ public class CarsLayer extends Layer {
         Point2D position = positionRotation.getKey();
         double rotation = positionRotation.getValue();
 
-        this.drawNode(gc, position.getX(), position.getY(), rotation, car.getLength(), Color.BLACK);
+        int argb = car.getCarId().hashCode();
+        int b = (argb)&0xFF;
+        int g = (argb>>8)&0xFF;
+        int r = (argb>>16)&0xFF;
+        int a = (argb>>24)&0xFF;
+
+        this.drawNode(gc, position.getX(), position.getY(), rotation, car.getLength(), new Color((float)r/255.0, (float)g/255.0, (float)b/255.0, 1.0));
     }
 
     /**
