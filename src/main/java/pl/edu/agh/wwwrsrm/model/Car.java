@@ -57,7 +57,6 @@ public class Car {
     }
 
     public void progress(double delta) {
-//        progress += delta * (parabola(/*0.5*/0.85, 0.85, getProgress(), 2))*/*2.4*/multiplier;
         progress += delta * multiplier;
     }
 

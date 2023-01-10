@@ -29,10 +29,10 @@ public class TimeScrollBar extends ScrollBar {
     public void init() {
         this.setPrefWidth(MENU_WIDTH);
         this.setOrientation(Orientation.HORIZONTAL);
-        this.setMin(0.1);
-        this.setMax(2.0);
+        this.setMin(0.2);
+        this.setMax(10.0);
         this.setValue(1.0);
-        this.setUnitIncrement(0.5);
+        this.setUnitIncrement(0.1);
         this.setVisibleAmount(1.0);
         this.valueProperty().addListener((observableValue, oldValue, newValue) -> onBarScrolled(newValue.doubleValue()));
         visualizationMap.setTimeMultiplier((int) (this.getValue()));
