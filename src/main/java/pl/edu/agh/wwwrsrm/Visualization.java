@@ -46,10 +46,10 @@ public class Visualization extends Application {
         stage.setScene(new Scene(loadingWindow));
         stage.show();
         Thread.sleep(50);
-        Platform.runLater(this::loadWindow);
+        Platform.runLater(this::loadApplication);
     }
 
-    public void loadWindow() {
+    public void loadApplication() {
         this.context = new SpringApplicationBuilder(SimulationVisualization.class)
                 .properties("mapFilePath=" + mapFilePath)
                 .listeners(new ApplicationFailedListener())

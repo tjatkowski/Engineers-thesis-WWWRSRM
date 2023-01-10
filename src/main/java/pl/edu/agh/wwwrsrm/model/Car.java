@@ -5,7 +5,6 @@ import javafx.util.Pair;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.math.NumberUtils;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
@@ -20,8 +19,6 @@ import static pl.edu.agh.wwwrsrm.utils.Interpolation.lerp;
 public class Car {
 
     private static WindowXYCoordinate getXYCoordinate(String node, GraphOSM osm_graph, MapWindow mapWindow) {
-        if (!NumberUtils.isCreatable(node))
-            return null;
         NodeOSM nodeOSM = osm_graph.getNodes().get(node);
         if (nodeOSM == null)
             return null;
@@ -100,7 +97,7 @@ public class Car {
     private double progress = 0;
 
     public double getProgress() {
-        return Math.min(progress, 1.0);
+        return Math.max(0.0, Math.min(progress, 1.0));
     }
 
     private boolean toDelete = false;
@@ -119,8 +116,8 @@ public class Car {
     }
 
     private void adjustMultiplier() {
-        double offset = 1.0 - this.progress;
-        multiplier += offset / 3.0;
+        double offset = ( 1.0 - this.progress ) / 3.0;
+        multiplier = Math.max(Math.min(multiplier + offset, 10.0), 0.1);
     }
 
     public void update(CarMessage car) {
