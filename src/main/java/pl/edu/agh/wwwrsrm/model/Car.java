@@ -116,11 +116,8 @@ public class Car {
     }
 
     private void adjustMultiplier() {
-        double offset = 1.0 - this.progress;
-        multiplier += offset / 3.0;
-
-        if(multiplier < 0)
-            multiplier = 0.1;
+        double offset = ( 1.0 - this.progress ) / 3.0;
+        multiplier = Math.max(Math.min(multiplier + offset, 10.0), 0.1);
     }
 
     public void update(CarMessage car) {
