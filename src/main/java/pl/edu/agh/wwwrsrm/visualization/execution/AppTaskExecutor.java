@@ -56,8 +56,7 @@ public class AppTaskExecutor {
         if (carMessageList.isEmpty()) {
             return;
         }
-        carsManager.nextBatch();
-        carMessageList.forEach(carsManager::processCarMessage);
+        carsManager.processCarMessageList(carMessageList.stream().toList());
         trafficDensity.nextBatch();
         carMessageList.forEach(trafficDensity::processCarMessage);
     }
