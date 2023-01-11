@@ -7,7 +7,7 @@ import pl.edu.agh.wwwrsrm.graph.GraphOSM;
 import pl.edu.agh.wwwrsrm.graph.NodeOSM;
 import pl.edu.agh.wwwrsrm.graph.WayOSM;
 import pl.edu.agh.wwwrsrm.model.Road;
-import pl.edu.agh.wwwrsrm.osm.WayParameters;
+import pl.edu.agh.wwwrsrm.parser.parameters.WayParameters;
 import pl.edu.agh.wwwrsrm.utils.TrafficDensity;
 import pl.edu.agh.wwwrsrm.utils.coordinates.WindowXYCoordinate;
 import pl.edu.agh.wwwrsrm.utils.window.MapWindow;

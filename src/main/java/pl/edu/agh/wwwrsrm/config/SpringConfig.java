@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.edu.agh.wwwrsrm.exceptions.MapFilePathException;
 import pl.edu.agh.wwwrsrm.graph.GraphOSM;
-import pl.edu.agh.wwwrsrm.osm.OsmParser;
+import pl.edu.agh.wwwrsrm.parser.Parser;
 
 @Configuration
 @RequiredArgsConstructor
@@ -17,7 +17,7 @@ public class SpringConfig {
 
     @Bean
     public GraphOSM graphOSM() throws MapFilePathException {
-        return OsmParser.CreateGraph(mapFilePath, "src/main/resources/osm/parameters/way_parameters.json");
+        return Parser.CreateGraph(mapFilePath, "src/main/resources/osm/parameters/way_parameters.json");
     }
 
 }
