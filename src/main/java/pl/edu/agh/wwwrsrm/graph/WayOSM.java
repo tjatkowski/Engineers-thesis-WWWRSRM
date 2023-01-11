@@ -2,7 +2,7 @@ package pl.edu.agh.wwwrsrm.graph;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import pl.edu.agh.wwwrsrm.osm.WayParameters;
+import pl.edu.agh.wwwrsrm.parser.parameters.WayParameters;
 
 import java.util.List;
 

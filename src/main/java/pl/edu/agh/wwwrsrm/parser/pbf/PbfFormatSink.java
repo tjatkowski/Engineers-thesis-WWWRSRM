@@ -1,4 +1,4 @@
-package pl.edu.agh.wwwrsrm.osm;
+package pl.edu.agh.wwwrsrm.parser.pbf;
 
 
 import lombok.Getter;
@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * OsmReader class is implementing Sink interface of the osmosis library.
+ * PbfFormatSink class is implementing Sink interface of the osmosis library.
  * It reads OSM data in .pbf format and stores all the nodes and ways which
  * can be accesses by getNodes and gedWays methods.
  */
 @Getter
-public class OsmReader implements Sink {
+public class PbfFormatSink implements Sink {
     private final Map<Long, Node> nodes = new HashMap<>();
     private final Map<Long, Way> ways = new HashMap<>();
 

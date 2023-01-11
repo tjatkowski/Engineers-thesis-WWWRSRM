@@ -1,4 +1,4 @@
-package pl.edu.agh.wwwrsrm.osm;
+package pl.edu.agh.wwwrsrm.parser.parameters;
 
 import javafx.scene.paint.Color;
 import lombok.AllArgsConstructor;
